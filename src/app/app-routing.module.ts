@@ -1,0 +1,32 @@
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
+
+import { LayoutComponent } from "./layouts/layout.component";
+
+// Auth
+import { AuthGuard } from "./core/guards/auth.guard";
+
+const routes: Routes = [
+  {
+    path: "",
+    pathMatch: "full",
+    redirectTo: "/auth/login",
+  },
+  {
+    path: "auth",
+    loadChildren: () =>
+      import("./account/account.module").then((m) => m.AccountModule),
+  },
+  {
+    path: "errors",
+    loadChildren: () =>
+      import("./errors/errors.module").then((m) => m.ErrorsModule),
+  },
+  { path: "**", pathMatch: "full", redirectTo: "/errors/404" },
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}
