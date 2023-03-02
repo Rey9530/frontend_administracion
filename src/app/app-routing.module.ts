@@ -11,7 +11,8 @@ const routes: Routes = [
     path: "",
     pathMatch: "full",
     redirectTo: "/auth/login",
-  },
+  }, 
+  { path: 'admin', component: LayoutComponent, loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule), canActivate: [AuthGuard] },
   {
     path: "auth",
     loadChildren: () =>
@@ -24,6 +25,7 @@ const routes: Routes = [
   },
   { path: "**", pathMatch: "full", redirectTo: "/errors/404" },
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

@@ -13,11 +13,7 @@ const httpOptions = {
   };
   
 
-@Injectable({ providedIn: 'root' })
-
-/**
- * Auth-service Component
- */
+@Injectable({ providedIn: 'root' }) 
 export class AuthenticationService {
 
     user!: User;
@@ -55,14 +51,10 @@ export class AuthenticationService {
      * @param email email of user
      * @param password password of user
      */
-    login(email: string, password: string) {
-        // return getFirebaseBackend()!.loginUser(email, password).then((response: any) => {
-        //     const user = response;
-        //     return user;
-        // });
+    login(usuario: string, password: string) { 
 
-        return this.http.post(AUTH_API + 'signin', {
-            email,
+        return this.http.post(AUTH_API + 'auth/sign-in', {
+            usuario,
             password
           }, httpOptions);
     }
