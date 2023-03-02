@@ -47,11 +47,11 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     if (localStorage.getItem("currentUser")) {
       var usuario = localStorage.getItem("currentUser") ?? "{}";
-      var jsonUsuario = JSON.parse(usuario); 
-      if(jsonUsuario!=null && jsonUsuario.token!=null){
+      var jsonUsuario = JSON.parse(usuario);
+      if (jsonUsuario != null && jsonUsuario.token != null) {
         this.router.navigate(["/admin"]);
       }
     }
@@ -76,31 +76,33 @@ export class LoginComponent implements OnInit {
    */
   onSubmit() {
     this.submitted = true;
-
     // Login Api
     this.authenticationService
       .login(this.f["email"].value, this.f["password"].value)
       .subscribe(
         (data: any) => {
+          console.log(data.data);
           if (data.status) {
             localStorage.setItem("toast", "true");
             localStorage.setItem("currentUser", JSON.stringify(data.data));
-            localStorage.setItem("token", data.token); 
-            this.router.navigate(['/admin/home']);
+            localStorage.setItem("token", data.data.token);
+            location.reload();
           } else {
             this.toastService.show(data.msg, {
               classname: "bg-danger text-white",
               delay: 15000,
             });
           }
+
+          this.submitted = false;
         },
-        (err) => { 
+        (err) => {
           this.toastService.show("El usuario o clave son incorrectos", {
             classname: "bg-danger text-white",
             delay: 15000,
           });
         }
-      ); 
+      );
   }
 
   /**
