@@ -5,7 +5,15 @@
         <div class="card-body">
           <p class="text-muted">Administracion de catalogo.</p>
           <!-- Nav tabs -->
-          <ul ngbNav #nav="ngbNav" [activeId]="1" class="nav nav-tabs mb-3">
+          <ul ngbNav #nav="ngbNav" [activeId]="0" class="nav nav-tabs mb-3">
+            <li [ngbNavItem]="0">
+              <a ngbNavLink>
+                <span class="d-sm-block"> Catalogo </span>
+              </a>
+              <ng-template ngbNavContent>
+                <ng-template [ngTemplateOutlet]="TabCatalogo"></ng-template>
+              </ng-template>
+            </li>
             <li [ngbNavItem]="1">
               <a ngbNavLink>
                 <span class="d-sm-block"> Categorias Catalogo </span>
@@ -33,6 +41,10 @@
       <!-- end card -->
     </div>
   </div>
+  
+  <ng-template #TabCatalogo>
+    <app-catalogo></app-catalogo>
+  </ng-template>
   
   <ng-template #TabCategorias>
     <app-categorias></app-categorias>

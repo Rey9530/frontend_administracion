@@ -10,13 +10,14 @@ import { NgbNavModule, NgbToastModule } from "@ng-bootstrap/ng-bootstrap";
 import { CategoriasComponent } from "./catalogo/categorias/categorias.component";
 import { TiposComponent } from "./catalogo/tipos/tipos.component"; 
 import { ToastsContainerAdmin } from "./toasts-container.component";
+import { CatalogoComponent } from './catalogo/catalogo/catalogo.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
     CategoriasComponent,
     TiposComponent, 
-    ToastsContainerAdmin
+    ToastsContainerAdmin, CatalogoComponent
   ],
   imports: [
     CommonModule,
