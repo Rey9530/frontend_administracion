@@ -3,10 +3,8 @@ import { getFirebaseBackend } from '../../authUtils';
 import { User } from '../models/auth.models';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { GlobalComponent } from "../../global-component";
-
-const AUTH_API = GlobalComponent.AUTH_API;
+import { BehaviorSubject, Observable } from 'rxjs'; 
+import { environment } from '../../../environments/environment';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -14,8 +12,9 @@ const httpOptions = {
   
 
 @Injectable({ providedIn: 'root' }) 
-export class AuthenticationService {
-
+export class AuthenticationService { 
+    
+    url_api:String = environment.API_URL;
     user!: User;
     currentUserValue: any;
 
@@ -39,7 +38,7 @@ export class AuthenticationService {
         // });
 
         // Register Api
-        return this.http.post(AUTH_API + 'signup', {
+        return this.http.post(this.url_api + 'signup', {
             email,
             first_name,
             password,
@@ -51,12 +50,15 @@ export class AuthenticationService {
      * @param email email of user
      * @param password password of user
      */
-    login(usuario: string, password: string) { 
-
-        return this.http.post(AUTH_API + 'auth/sign-in', {
+    login(usuario: string, password: string) {  
+        return this.http.post(this.url_api + 'auth/sign-in', {
             usuario,
             password
           }, httpOptions);
+    }
+
+    veryfycarToken() {  
+        return this.http.post(this.url_api + 'auth/sign-in-with-token', {});
     }
 
     /**
@@ -70,8 +72,7 @@ export class AuthenticationService {
      * Logout the user
      */
     logout() {
-        // logout the user
-        // return getFirebaseBackend()!.logout();
+        // logout the user 
         localStorage.removeItem('currentUser');
         localStorage.removeItem('token');
         this.currentUserSubject.next(null!);

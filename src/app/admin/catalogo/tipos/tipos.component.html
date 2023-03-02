@@ -1,0 +1,121 @@
+ <div class="row">
+  <div class="col-12">
+    <button
+      class="btn btn-primary createTask float-end"
+      type="button"
+      data-bs-toggle="modal"
+      data-bs-target="#createTask"
+      (click)="openModal(content)"
+    >
+      <i class="ri-add-fill align-bottom"></i> Nueva
+    </button>
+  </div>
+</div>
+<div class="table-responsive"  *ngIf="!loading">
+  <table class="table align-middle table-nowrap mb-0">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of listado">
+        <th scope="row">{{ item.id_tipo }}</th>
+        <td>{{ item.nombre }}</td>
+        <td class="hstack gap-2">
+          <!-- Buttons Group -->
+          <button
+            type="button"
+            class="btn btn-warning waves-effect waves-light"
+            (click)="editarRegistro(content, item.id_tipo)"
+          >
+            <i class="ri-pencil-fill"></i>
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger btn-icon waves-effect waves-light"
+            (click)="eliminar(item.id_tipo)"
+          >
+            <i class="ri-delete-bin-5-line"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<div class="row" *ngIf="loading">
+  <div class="col-12 text-center">
+    <br>
+    <br>
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+</div>
+
+<!-- Add Todo Data -->
+<ng-template #content role="document" let-modal>
+  <div class="modal-header p-3 bg-soft-success">
+    <h5 class="modal-title" id="createTaskLabel">Crear</h5>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="modal"
+      id="createTaskBtn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div id="task-error-msg" class="alert alert-danger py-2"></div>
+    <form
+      autocomplete="off"
+      action=""
+      id="creattask-form"
+      (ngSubmit)="saveTodo()"
+      [formGroup]="todoForm"
+    >
+      <input type="hidden" id="taskid-input" class="form-control" />
+      <div class="mb-3">
+        <label for="nombre-input" class="form-label">Nombre</label>
+        <input
+          type="text"
+          id="nombre-input"
+          class="form-control"
+          placeholder="Ingrese un nombre"
+          formControlName="nombre"
+          [ngClass]="{ 'is-invalid': submitted && form['nombre'].errors }"
+        />
+        <div
+          *ngIf="submitted && form['nombre'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="form['nombre'].errors['required']">
+            El nombre es requerido
+          </div>
+        </div>
+      </div>
+
+      <div class="hstack gap-2 justify-content-end">
+        <button
+          type="button"
+          class="btn btn-ghost-success"
+          data-bs-dismiss="modal"
+          (click)="closeModal()"
+        >
+          <i class="ri-close-fill align-bottom"></i> Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary" id="addNewTodo">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<!-- end auth-page-wrapper -->
+<app-toasts-admin aria-live="polite" aria-atomic="true"></app-toasts-admin>

@@ -14,23 +14,25 @@ export class AuthGuard implements CanActivate {
         private authFackservice: AuthfakeauthenticationService
     ) { }
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        if (environment.defaultauth === 'firebase') {
-            const currentUser = this.authenticationService.currentUser();
-            if (currentUser) {
-                // logged in so return true
-                return true;
-            }
-        } else {
-            const currentUser = this.authFackservice.currentUserValue;
-            if (currentUser) {
-                // logged in so return true
-                return true;
-            }
-            // check if user data is in storage is logged in via API.
-            if(localStorage.getItem('currentUser')) {
-                return true;
-            }
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) { 
+        const currentUser = this.authFackservice.currentUserValue;
+        if (currentUser) {  
+            this.authenticationService.veryfycarToken()
+            .subscribe({
+                next(data:any) {   
+                    localStorage.setItem("currentUser", JSON.stringify(data.data));
+                    localStorage.setItem("token", data.data.token); 
+                },
+                error(err:any) { 
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('token'); 
+                },
+            });
+
+        }
+        // check if user data is in storage is logged in via API.
+        if(localStorage.getItem('currentUser')) { 
+            return true;
         }
         // not logged in so redirect to login page with the return url
         this.router.navigate(['/auth/login'], { queryParams: { returnUrl: state.url } });

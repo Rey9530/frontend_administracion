@@ -15,7 +15,7 @@ File: Main Js File
 	 */
 	var navbarMenuHTML = document.querySelector(".navbar-menu").innerHTML;
 	var horizontalMenuSplit = 7; // after this number all horizontal menus will be moved in More menu options
-	var default_lang = "en"; // set Default Language
+	var default_lang = "es"; // set Default Language
 	var language = localStorage.getItem("language");
 
 	function initLanguage() {

@@ -47,8 +47,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-    console.log((localStorage.getItem("currentUser")));
+  ngOnInit(): void { 
     if (localStorage.getItem("currentUser")) {
       var usuario = localStorage.getItem("currentUser") ?? "{}";
       var jsonUsuario = JSON.parse(usuario); 
@@ -86,8 +85,7 @@ export class LoginComponent implements OnInit {
           if (data.status) {
             localStorage.setItem("toast", "true");
             localStorage.setItem("currentUser", JSON.stringify(data.data));
-            localStorage.setItem("token", data.token);
-            console.log("Entramoooos");
+            localStorage.setItem("token", data.token); 
             this.router.navigate(['/admin/home']);
           } else {
             this.toastService.show(data.msg, {

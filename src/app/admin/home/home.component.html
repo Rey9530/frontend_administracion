@@ -1,1 +1,45 @@
-<p>home works!</p>
+<div class="row">
+    <div class="col-12">
+      <h5 class="mb-3">Configuraciones del catalogo</h5>
+      <div class="card">
+        <div class="card-body">
+          <p class="text-muted">Administracion de catalogo.</p>
+          <!-- Nav tabs -->
+          <ul ngbNav #nav="ngbNav" [activeId]="1" class="nav nav-tabs mb-3">
+            <li [ngbNavItem]="1">
+              <a ngbNavLink>
+                <span class="d-sm-block"> Categorias Catalogo </span>
+              </a>
+              <ng-template ngbNavContent>
+                <ng-template [ngTemplateOutlet]="TabCategorias"></ng-template>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+              <a ngbNavLink>
+                <span class="d-sm-block">Tipo Catalogo</span>
+              </a>
+              <ng-template ngbNavContent>
+                <ng-template [ngTemplateOutlet]="TabTiposCatalogo"></ng-template>
+              </ng-template>
+            </li>
+          </ul>
+          <!-- Tab panes -->
+          <div class="tab-content text-muted">
+            <div [ngbNavOutlet]="nav"></div>
+          </div>
+        </div>
+        <!-- end card-body -->
+      </div>
+      <!-- end card -->
+    </div>
+  </div>
+  
+  <ng-template #TabCategorias>
+    <app-categorias></app-categorias>
+  </ng-template>
+  
+  <!-- Tab Content -->
+  <ng-template #TabTiposCatalogo> 
+    <app-tipos></app-tipos>
+  </ng-template>
+  
