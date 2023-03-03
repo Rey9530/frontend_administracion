@@ -215,7 +215,7 @@
             placeholder="Ingrese un precio"
             formControlName="precio_con_iva"
             [ngClass]="{ 'is-invalid': submitted && form['precio_con_iva'].errors }"
-            (keyup)="saverange()"
+            (keyup)="saverange('+')"
           />
           <div
             *ngIf="submitted && form['precio_con_iva'].errors"
@@ -236,7 +236,7 @@
             placeholder="Ingrese un precio"
             formControlName="precio_sin_iva"
             [ngClass]="{ 'is-invalid': submitted && form['precio_sin_iva'].errors }"
-            (keyup)="saverange()"
+            (keyup)="saverange('-')"
           />
           <div
             *ngIf="submitted && form['precio_sin_iva'].errors"

@@ -6,7 +6,8 @@ import {
 } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ToastService } from "src/app/account/login/toast-service"; 
-import { CatalogoServicesService, CategoriasCatalogoServicesService, TipoCatalogoServicesService } from 'src/app/core/services';
+import { User } from 'src/app/core/models/auth.models';
+import { AuthenticationService, CatalogoServicesService, CategoriasCatalogoServicesService, TipoCatalogoServicesService } from 'src/app/core/services';
 // Sweet Alert
 import Swal from "sweetalert2";
 
@@ -20,6 +21,7 @@ import Swal from "sweetalert2";
 export class CatalogoComponent {
   todoForm!: UntypedFormGroup;
   submitted: boolean = false;
+  usuario!: User;
   loading: boolean = false;
   listado: any = [];
 
@@ -31,7 +33,8 @@ export class CatalogoComponent {
     private service: CatalogoServicesService,
     private serviceCat: CategoriasCatalogoServicesService,
     private serviceTipo: TipoCatalogoServicesService,
-    public toastService: ToastService
+    public toastService: ToastService,
+    public serviceAuth: AuthenticationService,
   ) {} 
   ngOnInit(): void {
     this.todoForm = this.formBuilder.group({
@@ -45,7 +48,13 @@ export class CatalogoComponent {
       id_: [0],
     });
     this.obtenerListadoCatTipo();
-    this.obtenerListado();
+    this.obtenerListado(); 
+    this.serviceAuth.currentUser.subscribe({
+      next:resp=>{
+        console.log(resp);
+        this.usuario=resp;
+      }
+    })
   }
 
   openModal(content: any) {
@@ -167,8 +176,22 @@ export class CatalogoComponent {
     this.submitted = true;
   }
 
-  saverange(){
-    console.log("data");
+  saverange(campo:string){
+    console.log();
+    var impuesto = this.usuario.impuesto +1;
+    if(campo==='+'){
+      var valor = parseFloat(this.form["precio_con_iva"].value);
+      var precio_sin_iva = (valor / impuesto).toFixed(2);
+      this.todoForm.patchValue({ 
+        precio_sin_iva
+      });
+    }else{
+      var valor = parseFloat(this.form["precio_sin_iva"].value);
+      var precio_con_iva = (valor * impuesto).toFixed(2);
+      this.todoForm.patchValue({ 
+        precio_con_iva
+      }); 
+    }
   }
   eliminar(id_: number) {
     var data = this.listado.filter((e: any) => e.id_catalogo == id_);

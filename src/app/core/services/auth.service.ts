@@ -19,11 +19,11 @@ export class AuthenticationService {
     currentUserValue: any;
 
     private currentUserSubject: BehaviorSubject<User>;
-    // public currentUser: Observable<User>;
+    public currentUser: Observable<User>;
 
     constructor(private http: HttpClient) {
         this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')!));
-        // this.currentUser = this.currentUserSubject.asObservable();
+        this.currentUser = this.currentUserSubject.asObservable();
      }
 
     /**
@@ -64,9 +64,9 @@ export class AuthenticationService {
     /**
      * Returns the current user
      */
-    public currentUser(): any {
-        return getFirebaseBackend()!.getAuthenticatedUser();
-    }
+    // public currentUser(): any {
+    //     return getFirebaseBackend()!.getAuthenticatedUser();
+    // }
 
     /**
      * Logout the user
