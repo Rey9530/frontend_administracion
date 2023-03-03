@@ -181,13 +181,13 @@ export class CatalogoComponent {
     var impuesto = this.usuario.impuesto +1;
     if(campo==='+'){
       var valor = parseFloat(this.form["precio_con_iva"].value);
-      var precio_sin_iva = (valor / impuesto).toFixed(2);
+      var precio_sin_iva = parseFloat((valor / impuesto).toFixed(2)); 
       this.todoForm.patchValue({ 
         precio_sin_iva
       });
     }else{
-      var valor = parseFloat(this.form["precio_sin_iva"].value);
-      var precio_con_iva = (valor * impuesto).toFixed(2);
+      var valor = parseFloat(this.form["precio_sin_iva"].value); 
+      var precio_con_iva = parseFloat((valor * impuesto).toFixed(2)); 
       this.todoForm.patchValue({ 
         precio_con_iva
       }); 
