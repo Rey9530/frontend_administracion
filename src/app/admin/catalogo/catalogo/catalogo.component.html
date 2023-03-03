@@ -12,16 +12,17 @@
     </button>
   </div>
 </div>
-<div class="table-responsive"  *ngIf="!loading">
+<div class="table-responsive" *ngIf="!loading">
   <table class="table align-middle table-nowrap mb-0">
     <thead>
       <tr>
         <th scope="col">#</th>
         <th scope="col">Código</th>
-        <th scope="col">Nombre</th> 
+        <th scope="col">Nombre</th>
         <th scope="col">Tipo</th>
         <th scope="col">Categoria</th>
-        <th scope="col">precio</th>
+        <th scope="col">Precio con IVA</th>
+        <th scope="col">Precio sin IVA</th>
         <th scope="col">Action</th>
       </tr>
     </thead>
@@ -29,10 +30,11 @@
       <tr *ngFor="let item of listado">
         <th scope="row">{{ item.id_catalogo }}</th>
         <th scope="row">{{ item.codigo }}</th>
-        <th scope="row">{{ item.nombre }}</th> 
+        <th scope="row">{{ item.nombre }}</th>
         <th scope="row">{{ item.Tipo.nombre }}</th>
         <th scope="row">{{ item.Categorias.nombre }}</th>
-        <th scope="row">{{ item.precio | currency }}</th>  
+        <th scope="row">{{ item.precio_con_iva | currency }}</th>
+        <th scope="row">{{ item.precio_sin_iva | currency }}</th>
         <td class="hstack gap-2">
           <!-- Buttons Group -->
           <button
@@ -55,11 +57,10 @@
   </table>
 </div>
 
-
 <div class="row" *ngIf="loading">
   <div class="col-12 text-center">
-    <br>
-    <br>
+    <br />
+    <br />
     <div class="spinner-border text-primary" role="status">
       <span class="sr-only">Loading...</span>
     </div>
@@ -149,62 +150,111 @@
         </div>
       </div>
 
-      <div class="mb-3"> 
-        <label for="categoria-input" class="form-label">Categoria</label>
-        <select class="form-control" data-choices data-choices-search-false id="categoria-input"
-            formControlName="id_categoria" [ngClass]="{ 'is-invalid': submitted && form['id_categoria'].errors }">
-            <option value="">Seleccione</option>
-            <option *ngFor="let item of listadoCate" value="{{item.id_categoria}}">{{item.nombre}}</option>
-        </select>
-        <div *ngIf="submitted && form['id_categoria'].errors" class="invalid-feedback" align="left">
-            <div *ngIf="form['id_categoria'].errors['required']">Categoria es requerido</div>
-        </div>
-      </div>
-
-
-      <div class="mb-3"> 
-        <label for="tipo-input" class="form-label">Tipo</label>
-        <select class="form-control" data-choices data-choices-search-false id="tipo-input"
-            formControlName="id_tipo" [ngClass]="{ 'is-invalid': submitted && form['id_tipo'].errors }">
-            <option value="">Seleccione</option>
-            <option *ngFor="let item of listadoTipo" value="{{item.id_tipo}}">{{item.nombre}}</option>
-        </select>
-        <div *ngIf="submitted && form['id_tipo'].errors" class="invalid-feedback" align="left">
-            <div *ngIf="form['id_tipo'].errors['required']">Tipo es requerido</div>
-        </div>
-      </div>
-
-
-
-
-
       <div class="mb-3">
-        <label for="nombre-input" class="form-label">Precio</label>
-        <input
-          type="number"
-          id="precio-input"
+        <label for="categoria-input" class="form-label">Categoria</label>
+        <select
           class="form-control"
-          placeholder="Ingrese un precio"
-          formControlName="precio"
-          [ngClass]="{ 'is-invalid': submitted && form['precio'].errors }"
-        />
-        <div
-          *ngIf="submitted && form['precio'].errors"
-          class="invalid-feedback"
+          data-choices
+          data-choices-search-false
+          id="categoria-input"
+          formControlName="id_categoria"
+          [ngClass]="{ 'is-invalid': submitted && form['id_categoria'].errors }"
         >
-          <div *ngIf="form['precio'].errors['required']">
-            El precio es requerida
+          <option value="">Seleccione</option>
+          <option
+            *ngFor="let item of listadoCate"
+            value="{{ item.id_categoria }}"
+          >
+            {{ item.nombre }}
+          </option>
+        </select>
+        <div
+          *ngIf="submitted && form['id_categoria'].errors"
+          class="invalid-feedback"
+          align="left"
+        >
+          <div *ngIf="form['id_categoria'].errors['required']">
+            Categoria es requerido
           </div>
         </div>
       </div>
 
+      <div class="mb-3">
+        <label for="tipo-input" class="form-label">Tipo</label>
+        <select
+          class="form-control"
+          data-choices
+          data-choices-search-false
+          id="tipo-input"
+          formControlName="id_tipo"
+          [ngClass]="{ 'is-invalid': submitted && form['id_tipo'].errors }"
+        >
+          <option value="">Seleccione</option>
+          <option *ngFor="let item of listadoTipo" value="{{ item.id_tipo }}">
+            {{ item.nombre }}
+          </option>
+        </select>
+        <div
+          *ngIf="submitted && form['id_tipo'].errors"
+          class="invalid-feedback"
+          align="left"
+        >
+          <div *ngIf="form['id_tipo'].errors['required']">
+            Tipo es requerido
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-6">
+          <label for="nombre-input" class="form-label">Precio con IVA</label>
+          <input
+            type="number"
+            id="precio-input"
+            class="form-control"
+            placeholder="Ingrese un precio"
+            formControlName="precio_con_iva"
+            [ngClass]="{ 'is-invalid': submitted && form['precio_con_iva'].errors }"
+            (keyup)="saverange()"
+          />
+          <div
+            *ngIf="submitted && form['precio_con_iva'].errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="form['precio_con_iva'].errors['required']">
+              El precio es requerida
+            </div>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <label for="nombre-input" class="form-label">Precio sin IVA</label>
+          <input
+            type="number"
+            id="precio-input"
+            class="form-control"
+            placeholder="Ingrese un precio"
+            formControlName="precio_sin_iva"
+            [ngClass]="{ 'is-invalid': submitted && form['precio_sin_iva'].errors }"
+            (keyup)="saverange()"
+          />
+          <div
+            *ngIf="submitted && form['precio_sin_iva'].errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="form['precio_sin_iva'].errors['required']">
+              El precio es requerida
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="hstack gap-2 justify-content-end">
         <button
           type="button"
           class="btn btn-ghost-success"
           data-bs-dismiss="modal"
-          (click)="closeModal()"
+          (click)="modal.dismiss('Cross click')"
         >
           <i class="ri-close-fill align-bottom"></i> Cancelar
         </button>

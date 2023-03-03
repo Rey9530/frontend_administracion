@@ -40,7 +40,8 @@ export class CatalogoComponent {
       id_categoria: ["", [Validators.required]],
       id_tipo: ["", [Validators.required]],
       descripcion: [""],
-      precio: [0, [Validators.required]],
+      precio_con_iva: [0, [Validators.required]],
+      precio_sin_iva: [0, [Validators.required]],
       id_: [0],
     });
     this.obtenerListadoCatTipo();
@@ -67,7 +68,8 @@ export class CatalogoComponent {
       id_categoria: data[0].id_categoria,
       id_tipo: data[0].id_tipo,
       descripcion: data[0].descripcion,
-      precio: data[0].precio,
+      precio_con_iva: data[0].precio_con_iva,
+      precio_sin_iva: data[0].precio_sin_iva,
       id_,
     });
     this.openModal(content);
@@ -144,7 +146,8 @@ export class CatalogoComponent {
         id_categoria: Number(this.form["id_categoria"].value),
         id_tipo: Number(this.form["id_tipo"].value),
         descripcion: this.form["descripcion"].value,
-        precio: this.form["precio"].value,
+        precio_con_iva: this.form["precio_con_iva"].value,
+        precio_sin_iva: this.form["precio_sin_iva"].value,
      };
       this.service.create(data, this.form["id_"].value).subscribe({
         next: (resp) => {
@@ -164,6 +167,9 @@ export class CatalogoComponent {
     this.submitted = true;
   }
 
+  saverange(){
+    console.log("data");
+  }
   eliminar(id_: number) {
     var data = this.listado.filter((e: any) => e.id_catalogo == id_);
 
