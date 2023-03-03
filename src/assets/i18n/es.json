@@ -26,7 +26,8 @@
       "TEXT": "Administracion",
       "BADGE": "Nuevo",
       "LIST": { 
-        "CATALOGOCONF": "Catalogo"
+        "CATALOGOCONF": "Catalogo",
+        "FACTCONFIG": "Facturacion"
       }
     }, 
     "WIDGETS": {

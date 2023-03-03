@@ -1,0 +1,62 @@
+<div class="row">
+  <div class="col-6">
+    <form
+      autocomplete="off"
+      action=""
+      id="creattask-form"
+      (ngSubmit)="saveTodo()"
+      [formGroup]="todoForm"
+    >
+      <div class="mb-3">
+        <label for="nombre_sistema-input" class="form-label">Nombre</label>
+        <input
+          type="text"
+          id="nombre_sistema-input"
+          class="form-control"
+          placeholder="Ingrese Nombre para el sistema"
+          formControlName="nombre_sistema"
+          [ngClass]="{
+            'is-invalid': submitted && form['nombre_sistema'].errors
+          }"
+        />
+        <div
+          *ngIf="submitted && form['nombre_sistema'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="form['nombre_sistema'].errors['required']">
+            El nombre es requerida
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="impuesto-input" class="form-label">Impuesto (IVA)</label>
+        <input
+          type="number"
+          id="impuesto-input"
+          class="form-control"
+          placeholder="Ingrese impuesto"
+          formControlName="impuesto"
+          [ngClass]="{ 'is-invalid': submitted && form['impuesto'].errors }"
+        />
+        <div
+          *ngIf="submitted && form['impuesto'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="form['impuesto'].errors['required']">
+            EL impuesto es requerida
+          </div>
+        </div>
+      </div>
+
+      <div class="hstack gap-2 justify-content-end">
+        <button type="submit" class="btn btn-primary" id="addNewTodo">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- end auth-page-wrapper -->
+<app-toasts-admin aria-live="polite" aria-atomic="true"></app-toasts-admin>

@@ -1,0 +1,238 @@
+ 
+<div class="row">
+  <div class="col-12">
+    <button
+      class="btn btn-primary createTask float-end"
+      type="button"
+      data-bs-toggle="modal"
+      data-bs-target="#createTask"
+      (click)="openModal(content)"
+    >
+      <i class="ri-add-fill align-bottom"></i> Nueva
+    </button>
+  </div>
+</div>
+<div class="table-responsive" *ngIf="!loading">
+  <table class="table align-middle table-nowrap mb-0">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Tira</th>
+        <th scope="col">Desde</th>
+        <th scope="col">Hasta</th>
+        <th scope="col">Actual</th> 
+        <th scope="col">Serie</th> 
+        <th scope="col">Tipo</th> 
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of listado">
+        <th scope="row">{{ item.id_bloque }}</th>
+        <th scope="row">{{ item.tira }}</th>
+        <th scope="row">{{ item.desde }}</th>
+        <th scope="row">{{ item.hasta }}</th>
+        <th scope="row">{{ item.actual }}</th>
+        <th scope="row">{{ item.serie }}</th>
+        <th scope="row">{{ item.Tipo.nombre }}</th> 
+        <td class="hstack gap-2">
+          <!-- Buttons Group -->
+          <button
+            type="button"
+            class="btn btn-warning waves-effect waves-light"
+            (click)="editarRegistro(content, item.id_bloque)"
+          >
+            <i class="ri-pencil-fill"></i>
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger btn-icon waves-effect waves-light"
+            (click)="eliminar(item.id_bloque)"
+          >
+            <i class="ri-delete-bin-5-line"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="row" *ngIf="loading">
+  <div class="col-12 text-center">
+    <br />
+    <br />
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+</div>
+
+<!-- Add Todo Data -->
+<ng-template #content role="document" let-modal>
+  <div class="modal-header p-3 bg-soft-success">
+    <h5 class="modal-title" id="createTaskLabel">Bloques</h5>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="modal"
+      id="createTaskBtn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div id="task-error-msg" class="alert alert-danger py-2"></div>
+    <form
+      autocomplete="off"
+      action=""
+      id="creattask-form"
+      (ngSubmit)="saveTodo()"
+      [formGroup]="todoForm"
+    >
+      <input type="hidden" id="taskid-input" class="form-control" />
+
+      <div class="mb-3">
+        <label for="tira-input" class="form-label">Tira</label>
+        <input
+          type="text"
+          id="tira-input"
+          class="form-control"
+          placeholder="Ingrese tira"
+          formControlName="tira"
+          [ngClass]="{ 'is-invalid': submitted && form['tira'].errors }"
+        />
+        <div
+          *ngIf="submitted && form['tira'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="form['tira'].errors['required']">
+            La tira es requerida
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="desde-input" class="form-label">Desde</label>
+        <input
+          type="number"
+          id="desde-input"
+          class="form-control"
+          placeholder="Ingrese Desde"
+          formControlName="desde"
+          [ngClass]="{ 'is-invalid': submitted && form['desde'].errors }"
+        />
+        <div
+          *ngIf="submitted && form['desde'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="form['desde'].errors['required']">
+            Desde es requerido
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="hasta-input" class="form-label">Hasta</label>
+        <input
+          type="number"
+          id="hasta-input"
+          class="form-control"
+          placeholder="Ingrese hasta"
+          formControlName="hasta"
+          [ngClass]="{ 'is-invalid': submitted && form['hasta'].errors }"
+        />
+        <div
+          *ngIf="submitted && form['hasta'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="form['hasta'].errors['required']">
+            Hasta es requerida
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="actual-input" class="form-label">Actual</label>
+        <input
+          type="number"
+          id="actual-input"
+          class="form-control"
+          placeholder="Ingrese actual"
+          formControlName="actual"
+          [ngClass]="{ 'is-invalid': submitted && form['actual'].errors }"
+        />
+        <div
+          *ngIf="submitted && form['actual'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="form['actual'].errors['required']">
+            Actual es requerida
+          </div>
+        </div>
+      </div>
+
+
+      <div class="mb-3">
+        <label for="serie-input" class="form-label">Serie</label>
+        <input
+          type="text"
+          id="serie-input"
+          class="form-control"
+          placeholder="Ingrese serie"
+          formControlName="serie"
+          [ngClass]="{ 'is-invalid': submitted && form['serie'].errors }"
+        />
+        <div
+          *ngIf="submitted && form['serie'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="form['serie'].errors['required']">
+            Serie es requerida
+          </div>
+        </div>
+      </div>
+ 
+
+      <div class="mb-3">
+        <label for="id_tipo_factura-input" class="form-label">Tipo</label>
+        <select
+          class="form-control"
+          data-choices
+          data-choices-search-false
+          id="id_tipo_factura-input"
+          formControlName="id_tipo_factura"
+          [ngClass]="{ 'is-invalid': submitted && form['id_tipo_factura'].errors }"
+        >
+          <option value="">Seleccione</option>
+          <option *ngFor="let item of listadoTipos" value="{{ item.id_tipo_factura }}">
+            {{ item.nombre }}
+          </option>
+        </select>
+        <div
+          *ngIf="submitted && form['id_tipo_factura'].errors"
+          class="invalid-feedback"
+          align="left"
+        >
+          <div *ngIf="form['id_tipo_factura'].errors['required']">
+            Tipo es requerido
+          </div>
+        </div>
+      </div>
+ 
+      <div class="hstack gap-2 justify-content-end">
+        <button
+          type="button"
+          class="btn btn-ghost-success"
+          data-bs-dismiss="modal"
+          (click)="modal.dismiss('Cross click')"
+        >
+          <i class="ri-close-fill align-bottom"></i> Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary" id="addNewTodo">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<!-- end auth-page-wrapper -->
+<app-toasts-admin aria-live="polite" aria-atomic="true"></app-toasts-admin>

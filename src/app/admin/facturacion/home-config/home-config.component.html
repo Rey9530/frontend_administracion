@@ -1,0 +1,45 @@
+<div class="row">
+    <div class="col-12">
+      <h5 class="mb-3">Configuraciones de Facturacion y sistema</h5>
+      <div class="card">
+        <div class="card-body">
+          <p class="text-muted">Configuraciones de Facturacion.</p>
+          <!-- Nav tabs -->
+          <ul ngbNav #nav="ngbNav" [activeId]="0" class="nav nav-tabs mb-3">
+            <li [ngbNavItem]="0">
+              <a ngbNavLink>
+                <span class="d-sm-block"> Bloques </span>
+              </a>
+              <ng-template ngbNavContent>
+                <ng-template [ngTemplateOutlet]="TabBloques"></ng-template>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="1">
+              <a ngbNavLink>
+                <span class="d-sm-block"> Sistema </span>
+              </a>
+              <ng-template ngbNavContent>
+                <ng-template [ngTemplateOutlet]="TabSistema"></ng-template>
+              </ng-template>
+            </li> 
+          </ul>
+          <!-- Tab panes -->
+          <div class="tab-content text-muted">
+            <div [ngbNavOutlet]="nav"></div>
+          </div>
+        </div>
+        <!-- end card-body -->
+      </div>
+      <!-- end card -->
+    </div>
+  </div>
+  
+  <ng-template #TabBloques>
+    <app-bloques></app-bloques>
+  </ng-template>
+  
+  <ng-template #TabSistema>
+    <app-config></app-config>
+  </ng-template>
+   
+  

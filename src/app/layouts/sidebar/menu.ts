@@ -16,6 +16,11 @@ export const MENU: MenuItem[] = [
         label: "MENUITEMS.ADMIN.LIST.CATALOGOCONF",
         link: "home",
         parentId: 2,
+      },{
+        id: 4,
+        label: "MENUITEMS.ADMIN.LIST.FACTCONFIG",
+        link: "facturacion_config",
+        parentId: 2,
       }
     ],
   },
