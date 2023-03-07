@@ -20,14 +20,21 @@
         "NFT": "NFT",
         "JOB":"TRABAJO"
       }
-    }, 
-        
+    },  
     "ADMIN": {
-      "TEXT": "Administracion",
+      "TEXT": "Configuraciones",
       "BADGE": "Nuevo",
       "LIST": { 
         "CATALOGOCONF": "Catalogo",
         "FACTCONFIG": "Facturacion"
+      }
+    }, 
+    "FACTURACION": {
+      "TEXT": "Facturacion",
+      "BADGE": "Nuevo",
+      "LIST": { 
+        "CREAR": "Crear",
+        "VERLISTADO": "Ver Listado"
       }
     }, 
     "WIDGETS": {

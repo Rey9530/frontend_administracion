@@ -16,6 +16,14 @@
             </li>
             <li [ngbNavItem]="1">
               <a ngbNavLink>
+                <span class="d-sm-block"> Descuentos </span>
+              </a>
+              <ng-template ngbNavContent>
+                <ng-template [ngTemplateOutlet]="TabDescuentos"></ng-template>
+              </ng-template>
+            </li> 
+            <li [ngbNavItem]="2">
+              <a ngbNavLink>
                 <span class="d-sm-block"> Sistema </span>
               </a>
               <ng-template ngbNavContent>
@@ -38,8 +46,13 @@
     <app-bloques></app-bloques>
   </ng-template>
   
+  
+  <ng-template #TabDescuentos>
+    <app-descuentos></app-descuentos>
+  </ng-template>
+  
+  
   <ng-template #TabSistema>
     <app-config></app-config>
   </ng-template>
-   
   

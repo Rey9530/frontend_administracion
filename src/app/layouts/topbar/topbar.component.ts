@@ -43,6 +43,7 @@ export class TopbarComponent implements OnInit {
     private router: Router, private TokenStorageService: TokenStorageService) { }
 
   ngOnInit(): void {
+    this.changeMode();
     this.userData = this.TokenStorageService.getUser();
     this.element = document.documentElement;
 
@@ -112,11 +113,15 @@ export class TopbarComponent implements OnInit {
   /**
   * Topbar Light-Dark Mode Change
   */
-  changeMode(mode: string) {
-    this.mode = mode;
-    this.eventService.broadcast('changeMode', mode);
-
-    switch (mode) {
+  changeMode(mode: string='') {
+    if(mode.length>3){
+      localStorage.setItem('theme',mode);
+    }
+ 
+    this.mode = localStorage.getItem('theme') ?? 'light'; 
+    this.eventService.broadcast('changeMode', this.mode);
+ 
+    switch (this.mode) {
       case 'light':
         document.body.setAttribute('data-layout-mode', "light");
         document.body.setAttribute('data-sidebar', "light");

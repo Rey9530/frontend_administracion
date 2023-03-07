@@ -29,6 +29,117 @@
         </div>
       </div>
 
+
+      <div class="mb-3">
+        <label for="direccion-input" class="form-label">Dirección</label>
+        <input
+          type="text"
+          id="direccion-input"
+          class="form-control"
+          placeholder="Ingrese direccion para el sistema"
+          formControlName="direccion"
+          [ngClass]="{
+            'is-invalid': submitted && form['direccion'].errors
+          }"
+        />
+        <div
+          *ngIf="submitted && form['direccion'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="form['direccion'].errors['required']">
+            La direccion es requerida
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="razon-input" class="form-label">Razon</label>
+        <input
+          type="text"
+          id="razon-input"
+          class="form-control"
+          placeholder="Ingrese razon para el sistema"
+          formControlName="razon"
+          [ngClass]="{
+            'is-invalid': submitted && form['razon'].errors
+          }"
+        />
+        <div
+          *ngIf="submitted && form['razon'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="form['razon'].errors['required']">
+            La razon es requerida
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="nit-input" class="form-label">NIT</label>
+        <input
+          type="text"
+          id="nit-input"
+          class="form-control"
+          placeholder="Ingrese NIT para el sistema"
+          formControlName="nit"
+          [ngClass]="{
+            'is-invalid': submitted && form['nit'].errors
+          }"
+        />
+        <div
+          *ngIf="submitted && form['nit'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="form['nit'].errors['required']">
+            El nit es requerida
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="nrc-input" class="form-label">NRC</label>
+        <input
+          type="text"
+          id="nrc-input"
+          class="form-control"
+          placeholder="Ingrese NRC para el sistema"
+          formControlName="nrc"
+          [ngClass]="{
+            'is-invalid': submitted && form['nrc'].errors
+          }"
+        />
+        <div
+          *ngIf="submitted && form['nrc'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="form['nrc'].errors['required']">
+            El NRC es requerida
+          </div>
+        </div>
+      </div>
+
+
+      <div class="mb-3">
+        <label for="contactos-input" class="form-label">Contactos</label>
+        <input
+          type="text"
+          id="contactos-input"
+          class="form-control"
+          placeholder="Ingrese contactos para el sistema"
+          formControlName="contactos"
+          [ngClass]="{
+            'is-invalid': submitted && form['contactos'].errors
+          }"
+        />
+        <div
+          *ngIf="submitted && form['contactos'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="form['contactos'].errors['required']">
+            Contactos es requeridO
+          </div>
+        </div>
+      </div>
+
       <div class="mb-3">
         <label for="impuesto-input" class="form-label">Impuesto (IVA)</label>
         <input

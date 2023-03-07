@@ -24,6 +24,11 @@ export class ConfigComponent {
     this.todoForm = this.formBuilder.group({
       nombre_sistema: ["", [Validators.required]],
       impuesto: ["", [Validators.required]], 
+      direccion: [""], 
+      razon: [""], 
+      nit: [""], 
+      nrc: [""], 
+      contactos: [""], 
       id_: [0],
     }); 
     this.obtenerListado(); 
@@ -39,6 +44,11 @@ export class ConfigComponent {
         this.todoForm.patchValue({
           nombre_sistema: data.data.nombre_sistema,
           impuesto: data.data.impuesto ,
+          direccion:data.data.direccion,
+          razon:data.data.razon,
+          nit:data.data.nit,
+          nrc:data.data.nrc,
+          contactos:data.data.contactos,
           id_: data.data.id_general , 
         }); 
       },
@@ -57,6 +67,11 @@ export class ConfigComponent {
     if (this.todoForm.valid) {
       var data = { 
         nombre_sistema: this.form["nombre_sistema"].value,
+        direccion:this.form["direccion"].value,
+        razon:this.form["razon"].value,
+        nit:this.form["nit"].value,
+        nrc:this.form["nrc"].value,
+        contactos:this.form["contactos"].value,
         impuesto: this.form["impuesto"].value,  
      };
       this.service.actualizar(data, this.form["id_"].value).subscribe({

@@ -6,18 +6,18 @@ import {
 } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ToastService } from "src/app/account/login/toast-service"; 
-import { BloquesServicesService } from 'src/app/core/services';
+import { DescuentosServicesService } from 'src/app/core/services';
 // Sweet Alert
 import Swal from "sweetalert2";
 
 
 @Component({
-  selector: 'app-bloques',
-  templateUrl: './bloques.component.html',
+  selector: 'app-descuentos',
+  templateUrl: './descuentos.component.html',
   styles: [
   ]
 })
-export class BloquesComponent {
+export class DescuentosComponent {
   todoForm!: UntypedFormGroup;
   submitted: boolean = false;
   loading: boolean = false;
@@ -27,18 +27,14 @@ export class BloquesComponent {
   constructor(
     private modalService: NgbModal,
     private formBuilder: UntypedFormBuilder,
-    private service: BloquesServicesService, 
+    private service: DescuentosServicesService, 
     public toastService: ToastService
   ) {} 
   ngOnInit(): void {
     this.todoForm = this.formBuilder.group({
-      autorizacion: ["", [Validators.required]],
-      tira: ["", [Validators.required]],
-      desde: ["", [Validators.required]], 
-      hasta: ["", [Validators.required]],
-      actual: ["", [Validators.required]],
-      serie: ["", [Validators.required]], 
-      id_tipo_factura: ["", [Validators.required]], 
+      nombre: ["", [Validators.required]],
+      porcentaje: [0, [Validators.required]],
+      isItem: ["", [Validators.required]], 
       id_: [0],
     }); 
     this.obtenerListado();
@@ -59,15 +55,11 @@ export class BloquesComponent {
   }
 
   editarRegistro(content: any, id_: any) {
-    var data = this.listado.filter((e: any) => e.id_bloque == id_);
+    var data = this.listado.filter((e: any) => e.id_descuento == id_);
     this.todoForm.patchValue({
-      autorizacion: data[0].autorizacion,
-      tira: data[0].tira,
-      desde: data[0].desde,
-      hasta: data[0].hasta,
-      actual: data[0].actual,
-      serie: data[0].serie,
-      id_tipo_factura: data[0].id_tipo_factura, 
+      nombre: data[0].nombre,
+      porcentaje: data[0].porcentaje,
+      isItem: data[0].isItem, 
       id_,
     });
     this.openModal(content);
@@ -101,7 +93,7 @@ export class BloquesComponent {
 
   obtenerListadoDeTipos() {
     this.loading = true;
-    this.service.getTiposFactural().subscribe({
+    this.service.getTiposDescuentos().subscribe({
       next: (resp) => {
         this.loading = false;
         var r: any = resp;
@@ -129,13 +121,9 @@ export class BloquesComponent {
     console.log(this.todoForm.valid);
     if (this.todoForm.valid) {
       var data = { 
-        autorizacion: this.form["autorizacion"].value,
-        tira: this.form["tira"].value,
-        desde: this.form["desde"].value, 
-        hasta: this.form["hasta"].value, 
-        actual: this.form["actual"].value, 
-        serie: this.form["serie"].value, 
-        id_tipo_factura: Number(this.form["id_tipo_factura"].value), 
+        nombre: this.form["nombre"].value,
+        porcentaje: this.form["porcentaje"].value,
+        isItem: this.form["isItem"].value,
      };
       this.service.create(data, this.form["id_"].value).subscribe({
         next: (resp) => {

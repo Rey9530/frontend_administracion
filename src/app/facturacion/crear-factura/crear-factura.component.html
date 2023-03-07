@@ -1,0 +1,624 @@
+<div
+  class="row justify-content-center"
+  *ngIf="!showView; else loadingContainer"
+>
+  <div class="col-xxl-12">
+    <div class="card">
+      <form
+        (ngSubmit)="saveUser()"
+        [formGroup]="InvoicesForm"
+        id="invoice_form"
+      >
+        <div class="card-body pb-0">
+          <div class="col-lg-12">
+            <div class="card-header border-bottom-dashed">
+              <div class="d-flex flex-wrap">
+                <div class="flex-grow-1">
+                  <img
+                    src="assets/images/logo-dark.png"
+                    class="card-logo card-logo-dark"
+                    alt="logo dark"
+                    height="25"
+                  />
+                  <img
+                    src="assets/images/logo-light.png"
+                    class="card-logo card-logo-light"
+                    alt="logo light"
+                    height="25"
+                  />
+                  <div class="mt-sm-1">
+                    <h6 class="text-muted text-uppercase fw-semibold">
+                      Direccion
+                    </h6>
+                    <p class="text-muted mb-1" id="address-details">
+                      {{ datosSistema.direccion }}
+                    </p>
+                  </div>
+                </div>
+                <div class="flex-shrink-0 mt-sm-0 mt-3">
+                  <h6>
+                    <span class="text-muted fw-normal">Giro: </span
+                    ><span id="legal-register-no">{{
+                      datosSistema.razon
+                    }}</span>
+                  </h6>
+                  <h6>
+                    <span class="text-muted fw-normal">NIT: </span
+                    ><span id="legal-register-no">{{ datosSistema.nit }}</span>
+                  </h6>
+
+                  <h6>
+                    <span class="text-muted fw-normal">NRC: </span
+                    ><span id="legal-register-no">{{ datosSistema.nrc }}</span>
+                  </h6>
+                </div>
+              </div>
+            </div>
+            <!--end card-header-->
+          </div>
+          <!--end col-->
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-lg-3 col-sm-6">
+              <label for="choices-payment-status">Tipo de Documento</label>
+              <div class="input-light">
+                <select
+                  class="form-control bg-light border-0"
+                  data-choices
+                  data-choices-search-false
+                  id="choices-payment-status"
+                  name
+                  required
+                  (change)="cargarNoFactura(selectorTipo)"
+                  formControlName="id_tipo_factura"
+                  #selectorTipo
+                  [ngClass]="{
+                    'is-invalid': submitted && form['id_tipo_factura'].errors
+                  }"
+                >
+                  <option
+                    *ngFor="let item of listadoTipos"
+                    value="{{ item.id_tipo_factura }}"
+                  >
+                    {{ item.nombre }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <!--end col-->
+            <div class="col-lg-3 col-sm-6">
+              <label for="invoicenoInput">No. Factura</label>
+              <input
+                type="text"
+                class="form-control bg-light border-0"
+                id="invoicenoInput"
+                placeholder="No. Factura"
+                value="{{ noFactura }}"
+                readonly
+              />
+            </div>
+            <!--end col-->
+            <div class="col-lg-3 col-sm-6">
+              <div>
+                <label for="date-field">Fecha</label>
+                <input
+                  type="text"
+                  class="form-control bg-light border-0"
+                  id="date-field"
+                  data-provider="flatpickr"
+                  data-time="true"
+                  readonly
+                  placeholder="Select Date-time"
+                  value="{{ fechashow }}"
+                />
+              </div>
+            </div>
+            <!--end col-->
+          </div>
+          <!--end row-->
+        </div>
+        <div class="card-body border-top border-top-dashed">
+          <div class="row">
+            <div class="col-12">
+              <div>
+                <label class="text-muted text-uppercase fw-semibold"
+                  >Datos del cliente</label
+                >
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-sm-4 mb-4">
+              <input
+                type="text"
+                class="form-control bg-light border-0"
+                id="cliente"
+                placeholder="Cliente"
+                required
+                formControlName="cliente"
+                [ngClass]="{
+                  'is-invalid': submitted && form['cliente'].errors
+                }"
+              />
+            </div>
+            <div class="col-lg-8 col-sm-8 mb-4">
+              <input
+                type="text"
+                class="form-control bg-light border-0"
+                data-plugin="cleave-phone"
+                id="direccion"
+                placeholder="Dirección"
+                required
+                formControlName="direccion"
+                [ngClass]="{
+                  'is-invalid': submitted && form['direccion'].errors
+                }"
+              />
+            </div>
+            <ng-container *ngIf="tipoFactura == 2">
+              <div class="col-12">
+                <div>
+                  <label
+                    for="billingName"
+                    class="text-muted text-uppercase fw-semibold"
+                    >Datos de contribuyente</label
+                  >
+                </div>
+              </div>
+              <div class="col-lg-3 col-sm-3 mb-2">
+                <div class="input-light">
+                  <select
+                    class="form-control bg-light border-0"
+                    data-choices
+                    data-choices-search-false
+                    id="choices-payment-status"
+                    required
+                    (change)="obtenerMunicipios(departamentoSelected)"
+                    #departamentoSelected
+                  >
+                    <option value="" selected>Departamento...</option>
+                    <option
+                      *ngFor="let item of listadoDepartamentos"
+                      value="{{ item.id_departamento }}"
+                    >
+                      {{ item.nombre }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-3 col-sm-3 mb-2">
+                <div class="input-light">
+                  <select
+                    class="form-control bg-light border-0"
+                    data-choices
+                    data-choices-search-false
+                    id="choices-payment-status"
+                    required 
+                    formControlName="id_municipio"
+                    #selectorTipo
+                    [ngClass]="{
+                      'is-invalid': submitted && form['id_municipio'].errors
+                    }"
+                  >
+                    <option value="" selected>Municipios...</option>
+                    <option
+                      *ngFor="let item of listadoMunicipios"
+                      value="{{ item.id_municipio }}"
+                    >
+                      {{ item.nombre }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-sm-3 mb-2">
+                <input
+                  type="text"
+                  class="form-control bg-light border-0"
+                  id="no_registro"
+                  placeholder="NRC"
+                  required
+                  formControlName="no_registro"
+                  [ngClass]="{
+                    'is-invalid': submitted && form['no_registro'].errors
+                  }"
+                />
+              </div>
+
+              <div class="col-lg-3 col-sm-3 mb-2">
+                <input
+                  type="text"
+                  class="form-control bg-light border-0"
+                  id="nit"
+                  placeholder="NIT"
+                  required
+                  formControlName="nit"
+                  [ngClass]="{
+                    'is-invalid': submitted && form['nit'].errors
+                  }"
+                />
+              </div>
+
+              <div class="col-lg-3 col-sm-3 mb-2">
+                <input
+                  type="text"
+                  class="form-control bg-light border-0"
+                  id="giro"
+                  placeholder="Giro"
+                  required
+                  formControlName="giro"
+                  [ngClass]="{
+                    'is-invalid': submitted && form['giro'].errors
+                  }"
+                />
+              </div>
+            </ng-container>
+            <!--end col-->
+          </div>
+          <!--end row-->
+        </div>
+      </form>
+      <div class="card-body pt-0">
+        <div class="row">
+          <div class="col-12 mb-2">
+            <div>
+              <label
+                for="billingName"
+                class="text-muted text-uppercase fw-semibold"
+                >Detalle</label
+              >
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="invoice-table table table-borderless table-nowrap mb-0">
+            <thead class="align-middle">
+              <tr class="table-active">
+                <th scope="col" style="width: 50px">#</th>
+                <th scope="col">Detalle</th>
+                <th scope="col" style="width: 120px">Cantidad</th>
+                <th scope="col" style="width: 120px">Precio</th>
+                <th scope="col" style="width: 120px">Sub Total</th>
+                <th scope="col" style="width: 120px">Descuentos</th>
+                <th scope="col" class="text-end" style="width: 120px">Total</th>
+                <th scope="col" class="text-end" style="width: 20px"></th>
+              </tr>
+            </thead>
+            <tbody id="newlink">
+              <tr
+                id="1"
+                class="product"
+                *ngFor="let item of listadoDeDetalle; let i = index"
+              >
+                <th scope="row" class="product-id">{{ i + 1 }}</th>
+                <td class="text-start">
+                  <ng-select
+                    [items]="listadoDeCatalogos[i]"
+                    bindLabel="nombre"
+                    [(ngModel)]="selectedAccount[i]"
+                    (search)="execKeypress($event, i)"
+                    (change)="seleccionarItem($event)"
+                  >
+                    <ng-template ng-optgroup-tmp let-item="item">
+                      {{ item.country || "Unnamed group" }}
+                    </ng-template>
+                  </ng-select>
+                </td>
+
+                <td>
+                  <div class="input-step">
+                    <button type="button" class="minus" (click)="decrement(i)">
+                      –
+                    </button>
+                    <input
+                      type="number"
+                      class="product-quantity"
+                      [(ngModel)]="item.cantidad"
+                      (keyup)="recalculateCart()"
+                    />
+                    <button type="button" class="plus" (click)="increment(i)">
+                      +
+                    </button>
+                  </div>
+                </td>
+                <td>
+                  <input
+                    *ngIf="tipoFactura == 1"
+                    type="number"
+                    class="form-control product-price bg-light border-0"
+                    placeholder="0.00"
+                    required
+                    (keyup)="recalculateCart()"
+                    [(ngModel)]="item.precio_con_iva"
+                    min="0"
+                  />
+                  <!-- <input
+                    *ngIf="tipoFactura == 2"
+                    type="number"
+                    class="form-control product-price bg-light border-0"
+                    placeholder="0.00"
+                    required
+                    value=""
+                    min="0"
+                   > -->
+                  <div
+                    *ngIf="tipoFactura == 2"
+                    class="form-control product-price bg-light border-0"
+                  >
+                    {{
+                      item.precio_con_iva / (datosSistema.impuesto + 1)
+                        | currency : "USD" : "symbol" : "1.3-3"
+                    }}
+                  </div>
+                  <div class="invalid-feedback">Please enter a rate</div>
+                </td>
+                <td class="text-end">
+                  <div
+                    class="form-control bg-light border-0 product-line-price"
+                  >
+                    {{ item.subtotal | currency }}
+                  </div>
+                </td>
+                <td class="text-end">
+                  <select
+                    *ngIf="item.id_descuento == 0"
+                    class="form-control bg-light border-0"
+                    data-choices
+                    data-choices-search-false
+                    data-choices-removeItem
+                    id="choices-descuento"
+                    (change)="asignarDescuento(descuento, i)"
+                    #descuento
+                  >
+                    <option value="0" selected>Ninguno</option>
+                    <option
+                      *ngFor="let item of listadoTiposDescuentos"
+                      value="{{ item.id_descuento }}"
+                    >
+                      {{ item.nombre }}
+                    </option>
+                  </select>
+
+                  <div *ngIf="item.id_descuento > 0" class="input-step">
+                    <div
+                      class="form-control bg-light border-0 product-line-price"
+                    >
+                      {{ item.descuento | currency }}
+                    </div>
+                    <button
+                      type="button"
+                      class="plus"
+                      (click)="eliminarDescuento(i)"
+                    >
+                      <i class="ri-close-circle-line"></i>
+                    </button>
+                  </div>
+                </td>
+                <td class="text-end">
+                  <div
+                    class="form-control bg-light border-0 product-line-price"
+                  >
+                    {{ item.total | currency }}
+                  </div>
+                </td>
+                <td class="product-removal">
+                  <a class="btn btn-danger" (click)="removeItem(i)"
+                    ><i class="ri-delete-bin-line"></i
+                  ></a>
+                </td>
+              </tr>
+            </tbody>
+            <tbody>
+              <tr id="newForm" style="display: none">
+                <td class="d-none" colspan="5">
+                  <p>Add New Form</p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="5">
+                  <a
+                    href="javascript:void(0);"
+                    class="btn btn-soft-secondary fw-medium"
+                    id="add-item"
+                    (click)="addItem()"
+                    ><i class="ri-add-fill me-1 align-bottom"></i> Agregar
+                    Nuevo</a
+                  >
+                </td>
+              </tr>
+              <tr class="border-top border-top-dashed mt-2">
+                <td colspan="2">
+                  <div class="mb-2">
+                    <label
+                      for="choices-payment-type"
+                      class="form-label text-muted text-uppercase fw-semibold"
+                      >Formas de Pago</label
+                    >
+                    <div class="input-light">
+                      <select
+                        class="form-control bg-light border-0"
+                        data-choices
+                        data-choices-search-false
+                        data-choices-removeItem
+                        id="choices-payment-type"
+                        (change)="asignarMethodoDePago(metodosPago)"
+                        #metodosPago
+                      >
+                        <option value="">Seleccione</option>
+                        <option
+                          *ngFor="let item of listadoMethodosPago"
+                          value="{{ item.id_metodo_pago }}"
+                        >
+                          {{ item.nombre }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="mb-2">
+                    <!-- ===========Inicio de los metodos de pago============= -->
+                    <input
+                      *ngIf="metodoPago == 1 || metodoPago == 5"
+                      class="form-control bg-light border-0 mb-2"
+                      type="number"
+                      placeholder="Ingrese el efectivo"
+                      [(ngModel)]="efectivo"
+                      (keyup)="calcularCambio()"
+                    />
+                    <input
+                      *ngIf="metodoPago == 2 || metodoPago == 5"
+                      class="form-control bg-light border-0 mb-2"
+                      type="number"
+                      placeholder="Ingrese cantodad en tarjeta"
+                      [readonly]="metodoPago == 2"
+                      (keyup)="calcularCambio()"
+                      [(ngModel)]="tarjeta"
+                    />
+                    <input
+                      *ngIf="metodoPago == 3 || metodoPago == 5"
+                      [readonly]="metodoPago == 3"
+                      class="form-control bg-light border-0 mb-2"
+                      type="number"
+                      placeholder="Ingrese en cheque"
+                      (keyup)="calcularCambio()"
+                      [(ngModel)]="cheque"
+                    />
+                    <input
+                      *ngIf="metodoPago == 4 || metodoPago == 5"
+                      [readonly]="metodoPago == 4"
+                      class="form-control bg-light border-0 mb-2"
+                      type="number"
+                      placeholder="Ingrese en transferencia"
+                      (keyup)="calcularCambio()"
+                      [(ngModel)]="transferencia"
+                    />
+
+                    <input
+                      *ngIf="metodoPago == 6 || metodoPago == 5"
+                      [readonly]="metodoPago == 6"
+                      class="form-control bg-light border-0 mb-2"
+                      type="number"
+                      placeholder="Ingrese en credito"
+                      (keyup)="calcularCambio()"
+                      [(ngModel)]="credito"
+                    />
+                    <div
+                      *ngIf="metodoPago == 1 || metodoPago == 5"
+                      class="form-control bg-light border-0 mb-2"
+                    >
+                      {{ cambio | currency }}
+                    </div>
+                    <!-- ===========Inicio de los metodos de pago============= -->
+                  </div>
+                </td>
+                <td colspan="3"></td>
+                <td colspan="2" class="p-0">
+                  <table
+                    class="table table-borderless table-sm table-nowrap align-middle mb-0"
+                  >
+                    <tbody>
+                      <tr>
+                        <th scope="row">Sub Total</th>
+                        <td style="width: 120px">
+                          <div class="form-control bg-light border-0">
+                            {{ subtotal | currency }}
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Descuento</th>
+                        <td>
+                          <select
+                            *ngIf="id_descuento == 0"
+                            class="form-control bg-light border-0"
+                            data-choices
+                            data-choices-search-false
+                            data-choices-removeItem
+                            id="choices-descuento"
+                            (change)="asignarDescuentoGlobal(descuentoglobal)"
+                            #descuentoglobal
+                          >
+                            <option value="0" selected>Ninguno</option>
+                            <option
+                              *ngFor="let item of listadoTiposDescuentos"
+                              value="{{ item.id_descuento }}"
+                            >
+                              {{ item.nombre }}
+                            </option>
+                          </select>
+
+                          <div *ngIf="id_descuento > 0" class="input-step">
+                            <div
+                              class="form-control bg-light border-0 product-line-price"
+                            >
+                              {{ descuento | currency }}
+                            </div>
+                            <button
+                              type="button"
+                              class="plus"
+                              (click)="eliminarDescuentoGlobal()"
+                            >
+                              <i class="ri-close-circle-line"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr *ngIf="tipoFactura == 2">
+                        <th scope="row">IVA (13%)</th>
+                        <td>
+                          <div class="form-control bg-light border-0">
+                            {{ iva | currency }}
+                          </div>
+                        </td>
+                      </tr>
+
+                      <tr class="border-top border-top-dashed">
+                        <th scope="row">Monto Total</th>
+                        <td>
+                          <div class="form-control bg-light border-0">
+                            {{ montoTotal | currency }}
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <!--end table-->
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--end table-->
+        </div>
+        <!--end row--> 
+        <div
+          class="hstack gap-2 justify-content-end d-print-none mt-4 flex-wrap"
+        >
+          <button type="submit" class="btn btn-success" (click)="saveUser()">
+            <i class="ri-printer-line align-bottom mx-1"></i> Guardar
+          </button> 
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--end col-->
+</div>
+<!--end row-->
+
+<ng-template #loadingContainer>
+  <div class="row">
+    <div class="col-12 text-center">
+      <div
+        class="spinner-border mt-5"
+        style="width: 3rem; height: 3rem"
+        role="status"
+      >
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- end auth-page-wrapper -->
+<app-toasts-facturacion
+  aria-live="polite"
+  aria-atomic="true"
+></app-toasts-facturacion>

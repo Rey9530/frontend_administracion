@@ -17,6 +17,7 @@
     <thead>
       <tr>
         <th scope="col">#</th>
+        <th scope="col">Autorización</th>
         <th scope="col">Tira</th>
         <th scope="col">Desde</th>
         <th scope="col">Hasta</th>
@@ -29,6 +30,7 @@
     <tbody>
       <tr *ngFor="let item of listado">
         <th scope="row">{{ item.id_bloque }}</th>
+        <th scope="row">{{ item.autorizacion }}</th>
         <th scope="row">{{ item.tira }}</th>
         <th scope="row">{{ item.desde }}</th>
         <th scope="row">{{ item.hasta }}</th>
@@ -91,6 +93,25 @@
     >
       <input type="hidden" id="taskid-input" class="form-control" />
 
+      <div class="mb-3">
+        <label for="autorizacion-input" class="form-label">Autorización</label>
+        <input
+          type="text"
+          id="autorizacion-input"
+          class="form-control"
+          placeholder="Ingrese autorizacion"
+          formControlName="autorizacion"
+          [ngClass]="{ 'is-invalid': submitted && form['autorizacion'].errors }"
+        />
+        <div
+          *ngIf="submitted && form['autorizacion'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="form['autorizacion'].errors['required']">
+            La autorización es requerida
+          </div>
+        </div>
+      </div>
       <div class="mb-3">
         <label for="tira-input" class="form-label">Tira</label>
         <input

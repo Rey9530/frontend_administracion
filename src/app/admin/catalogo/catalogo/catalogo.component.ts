@@ -50,8 +50,7 @@ export class CatalogoComponent {
     this.obtenerListadoCatTipo();
     this.obtenerListado(); 
     this.serviceAuth.currentUser.subscribe({
-      next:resp=>{
-        console.log(resp);
+      next:resp=>{ 
         this.usuario=resp;
       }
     })
