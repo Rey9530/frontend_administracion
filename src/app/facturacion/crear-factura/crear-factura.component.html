@@ -129,7 +129,7 @@
             </div>
 
             <div class="col-lg-4 col-sm-4 mb-4">
-              <input
+              <!-- <input
                 type="text"
                 class="form-control bg-light border-0"
                 id="cliente"
@@ -139,8 +139,38 @@
                 [ngClass]="{
                   'is-invalid': submitted && form['cliente'].errors
                 }"
-              />
+              /> -->
+
+              <ng-autocomplete
+                [data]="listadoClientes"
+                [searchKeyword]="keyword"
+                placeholder="Cliente"
+                (selected)="selectEvent($event)"
+                (inputChanged)="onChangeSearch($event)"
+                (inputFocused)="onFocused($event)"
+                [itemTemplate]="itemTemplate"
+                formControlName="cliente_search"
+                [notFoundTemplate]="notFoundTemplate"
+                [ngClass]="{
+                  'is-invalid': submitted && form['cliente'].errors
+                }"
+              >
+                <span
+                  *ngIf="submitted && form['cliente'].errors"
+                  [ngClass]="{
+                    'is-invalid': submitted && form['cliente'].errors
+                  }"
+                  >El cliente es requerido</span
+                >
+                <ng-template #itemTemplate let-item>
+                  <a [innerHTML]="item.cliente"></a>
+                </ng-template>
+                <ng-template #notFoundTemplate let-notFound>
+                  <!-- <div [innerHTML]="notFound"></div> -->
+                </ng-template>
+              </ng-autocomplete>
             </div>
+
             <div class="col-lg-8 col-sm-8 mb-4">
               <input
                 type="text"
@@ -173,7 +203,8 @@
                     data-choices-search-false
                     id="choices-payment-status"
                     required
-                    (change)="obtenerMunicipios(departamentoSelected)"
+                    formControlName="id_departamento"
+                    (change)="obtenerMunicipios(departamentoSelected.value)"
                     #departamentoSelected
                   >
                     <option value="" selected>Departamento...</option>
@@ -193,7 +224,7 @@
                     data-choices
                     data-choices-search-false
                     id="choices-payment-status"
-                    required 
+                    required
                     formControlName="id_municipio"
                     #selectorTipo
                     [ngClass]="{
@@ -297,6 +328,7 @@
                     bindLabel="nombre"
                     [(ngModel)]="selectedAccount[i]"
                     (search)="execKeypress($event, i)"
+                    [loading]="listadoCatalogosLoading[i]"
                     (change)="seleccionarItem($event)"
                   >
                     <ng-template ng-optgroup-tmp let-item="item">
@@ -439,12 +471,13 @@
                         class="form-control bg-light border-0"
                         data-choices
                         data-choices-search-false
-                        data-choices-removeItem
+                        data-choices-removeItem 
+                        [(ngModel)]="metodoPago"
                         id="choices-payment-type"
                         (change)="asignarMethodoDePago(metodosPago)"
                         #metodosPago
                       >
-                        <option value="">Seleccione</option>
+                        <option value="0">Seleccione</option>
                         <option
                           *ngFor="let item of listadoMethodosPago"
                           value="{{ item.id_metodo_pago }}"
@@ -588,13 +621,13 @@
           </table>
           <!--end table-->
         </div>
-        <!--end row--> 
+        <!--end row-->
         <div
           class="hstack gap-2 justify-content-end d-print-none mt-4 flex-wrap"
         >
           <button type="submit" class="btn btn-success" (click)="saveUser()">
             <i class="ri-printer-line align-bottom mx-1"></i> Guardar
-          </button> 
+          </button>
         </div>
       </div>
     </div>

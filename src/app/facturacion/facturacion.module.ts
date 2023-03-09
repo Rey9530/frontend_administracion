@@ -11,7 +11,7 @@ import { FeatherModule } from "angular-feather";
 import { allIcons } from "angular-feather/icons";
 import { FlatpickrModule } from "angularx-flatpickr";
 import { Spanish } from 'flatpickr/dist/l10n/es.js';
-
+import {AutocompleteLibModule} from 'angular-ng-autocomplete';
 
 import {
   NgbDropdownModule,
@@ -42,6 +42,7 @@ import { VerFacturaComponent } from './ver-factura/ver-factura.component';
     FeatherModule.pick(allIcons),
     AdminRoutingModule,
     SharedModule,
+    AutocompleteLibModule
   ],
   providers: [DatePipe],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

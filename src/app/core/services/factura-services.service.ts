@@ -26,6 +26,10 @@ export class FacturaServicesService {
   buscarEnCatalago(data:any) {
     return this.http.post(`${this.endpoint}/buscar/catalogo`, data);
   } 
+
+  buscarClientes(data:any) {
+    return this.http.post(`${this.endpoint}/buscar/clientes`, data);
+  } 
   obtenerMetodosDePago() {
     return this.http.get(`${this.endpoint}/obtener_metodos_pago`);
   } 

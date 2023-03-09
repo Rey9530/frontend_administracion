@@ -57,6 +57,7 @@ export class CrearFacturaComponent implements OnInit {
   itemSeleccionado: number = 0;
   selectedAccount: string[] = [];
   listadoDeCatalogos: any[] = [];
+  listadoCatalogosLoading: any[] = [];
 
   searchSubject$ = new Subject<void>();
   debouncedPing$ = this.searchSubject$.pipe(
@@ -64,6 +65,15 @@ export class CrearFacturaComponent implements OnInit {
     switchMap((query: any) => {
       var datos = { query };
       return this.service.buscarEnCatalago(datos);
+    })
+  );
+
+  buscarCliente = new Subject<void>();
+  debouncedCliente = this.buscarCliente.pipe(
+    debounceTime(1000),
+    switchMap((query: any) => {
+      var datos = { query };
+      return this.service.buscarClientes(datos);
     })
   );
 
@@ -82,9 +92,10 @@ export class CrearFacturaComponent implements OnInit {
     this.rearmarFormulario(1);
   }
   execKeypress($event: any, index: number) {
-    this.itemSeleccionado = index;
+    this.itemSeleccionado = index; 
     // When remote, clear all items directly on keypress. Else we have an ugly lag because of the debounce time.
     if ($event.term.length < 3) return;
+    this.listadoCatalogosLoading[index]= true;
     this.searchSubject$.next($event.term);
   }
   seleccionarItem(data: any) {
@@ -117,10 +128,19 @@ export class CrearFacturaComponent implements OnInit {
     this.fechashow = this.date.toLocaleDateString("es-ES", options);
 
     this.debouncedPing$.subscribe((res: any) => {
+      this.listadoCatalogosLoading[this.itemSeleccionado]  =false;
       if (res.status) {
         this.listadoDeCatalogos[this.itemSeleccionado] = res.data;
       } else {
         this.listadoDeCatalogos[this.itemSeleccionado] = [];
+      }
+    });
+
+    this.debouncedCliente.subscribe((res: any) => {
+      if (res.status) {
+        this.listadoClientes = res.data;
+      } else {
+        this.listadoClientes = [];
       }
     });
   }
@@ -186,7 +206,11 @@ export class CrearFacturaComponent implements OnInit {
       },
     });
   }
-  rearmarFormulario(id_: number) {
+  rearmarFormulario(id_: number) { 
+    var valores = null;
+    if (this.InvoicesForm != null) {
+      valores = this.InvoicesForm.value;
+    }
     if (id_ == 1) {
       // consumidor final
       this.InvoicesForm = this.formBuilder.group({
@@ -194,8 +218,10 @@ export class CrearFacturaComponent implements OnInit {
         direccion: ["", [Validators.required]],
         id_tipo_factura: [id_, [Validators.required]],
         no_registro: [""],
+        cliente_search: [""],
         nit: [""],
         giro: [""],
+        id_departamento: [""],
         id_municipio: [""],
         subtotal: [0],
         descuento: [0],
@@ -212,11 +238,17 @@ export class CrearFacturaComponent implements OnInit {
         giro: ["", [Validators.required]],
         id_municipio: ["", [Validators.required]],
         id_tipo_factura: [id_, [Validators.required]],
+        cliente_search: [""],
+        id_departamento: [""],
         subtotal: [""],
         descuento: [""],
         iva: [""],
         total: [""],
       });
+    }
+    if (valores) {
+      valores.id_tipo_factura = id_;
+      this.InvoicesForm.patchValue(valores);
     }
   }
   cargarNoFactura(_t38: HTMLSelectElement) {
@@ -251,30 +283,33 @@ export class CrearFacturaComponent implements OnInit {
     });
 
     if (this.tipoFactura == 2 && this.listadoDepartamentos.length == 0) {
-      this.service.obtenerDepartamentos().subscribe({
-        next: (resp) => {
-          this.loading = false;
-          var r: any = resp;
-          if (r.status) {
-            this.listadoDepartamentos = r.data;
-          } else {
-            this.toastService.show(r.msg, {
-              classname: "bg-danger text-white",
-            });
-          }
-        },
-        error: (resp) => {
-          this.loading = false;
-          this.toastService.show("Ocurrio un error al cargar la información", {
+      this.obtenerDEpartamentos();
+    }
+  }
+  obtenerDEpartamentos() {
+    this.service.obtenerDepartamentos().subscribe({
+      next: (resp) => {
+        this.loading = false;
+        var r: any = resp;
+        if (r.status) {
+          this.listadoDepartamentos = r.data;
+        } else {
+          this.toastService.show(r.msg, {
             classname: "bg-danger text-white",
           });
-        },
-      });
-    }
+        }
+      },
+      error: (resp) => {
+        this.loading = false;
+        this.toastService.show("Ocurrio un error al cargar la información", {
+          classname: "bg-danger text-white",
+        });
+      },
+    });
   }
   obtenerMunicipios(valor: any) {
     this.loading = true;
-    this.service.obtenerMunicipios(valor.value).subscribe({
+    this.service.obtenerMunicipios(valor).subscribe({
       next: (resp) => {
         this.loading = false;
         var r: any = resp;
@@ -408,7 +443,7 @@ export class CrearFacturaComponent implements OnInit {
         }
       }
       this.total = this.total - this.descuento;
-    } 
+    }
     this.montoTotal = this.total;
   }
 
@@ -419,7 +454,7 @@ export class CrearFacturaComponent implements OnInit {
   transferencia: any = 0;
   credito: any = 0;
   asignarMethodoDePago(metodosPago: any) {
-    this.metodoPago = Number(metodosPago.value); 
+    this.metodoPago = Number(metodosPago.value);
 
     this.efectivo = "";
     this.cambio = 0;
@@ -494,7 +529,8 @@ export class CrearFacturaComponent implements OnInit {
       id_descuento: 0,
       iva: 0,
       total: 0,
-    });
+    }); 
+    this.listadoCatalogosLoading.push(false);
   }
 
   // Get Item Data
@@ -523,8 +559,9 @@ export class CrearFacturaComponent implements OnInit {
       this.transferencia +
       (this.efectivo - this.cambio);
 
-      console.log(this.InvoicesForm.valid)
-      console.log(this.InvoicesForm.errors)
+    console.log(this.InvoicesForm.valid);
+    console.log(this.InvoicesForm.errors);
+    console.log(this.InvoicesForm.value);
     if (this.listadoDeDetalle.length == 0) {
       this.toastService.show("La factura debe tener detalle", {
         classname: "bg-danger text-white",
@@ -564,16 +601,15 @@ export class CrearFacturaComponent implements OnInit {
           this.submitted = false;
           this.loading = false;
           var r: any = resp;
-          if(r.status){
+          if (r.status) {
             this.resetartodo();
             this.toastService.show(r.msg, {
               classname: "bg-success text-white",
-            }); 
-
-          }else{
+            });
+          } else {
             this.toastService.show(r.msg, {
               classname: "bg-danger text-white",
-            }); 
+            });
           }
         },
         error: (resp) => {
@@ -590,22 +626,88 @@ export class CrearFacturaComponent implements OnInit {
     }
   }
 
-  resetartodo(){
-    this.InvoicesForm.reset(); 
-    this.tipoFactura =1;
+  resetartodo() {
+    this.InvoicesForm.reset();
+    this.tipoFactura = 1;
     this.rearmarFormulario(this.tipoFactura);
-    this.subtotal=0;
-    this.descuento=0;
-    this.iva=0;
-    this.montoTotal=0;
-    this.efectivo =0;
-    this.cambio=0;
-    this.tarjeta=0;
-    this.cheque=0;
-    this.transferencia=0;
-    this.credito=0;
-    this.id_descuento=0;
-    this.metodoPago=0;
+    this.cargarNoFacturaEvent();
+    this.subtotal = 0;
+    this.descuento = 0;
+    this.iva = 0;
+    this.montoTotal = 0;
+    this.efectivo = 0;
+    this.cambio = 0;
+    this.tarjeta = 0;
+    this.cheque = 0;
+    this.transferencia = 0;
+    this.credito = 0;
+    this.id_descuento = 0;
+    this.metodoPago = 0;
     this.listadoDeDetalle = [];
+    this.listadoMunicipios = [];
+    this.itemSeleccionado = 0;
+    this.selectedAccount = [];
+    this.listadoDeCatalogos = [];
+    this.listadoClientes = [];
+  }
+
+  keyword = "cliente";
+  listadoClientes = [];
+
+  selectEvent(item: any) {
+    // do something with selected item
+    const { Municipio, cliente, giro, nit, no_registro, direccion } = item;
+
+    if (this.listadoDepartamentos.length == 0) {
+      this.obtenerDEpartamentos();
+    }
+    console.log(Municipio.id_departamento);
+    if (Municipio.id_departamento > 0) {
+      this.obtenerMunicipios(Municipio.id_departamento);
+    }
+    this.InvoicesForm.patchValue({
+      cliente,
+      giro,
+      nit,
+      no_registro,
+      id_municipio: Municipio.id_municipio,
+      id_departamento: Municipio.id_departamento,
+      direccion,
+    }); 
+  }
+
+  onChangeSearch(val: any) {
+    // fetch remote data from here
+    // And reassign the 'data' which is binded to 'data' property.
+    console.log(val);
+
+    this.InvoicesForm.patchValue({
+      cliente:val
+    }); 
+    if (val.length < 3) return;
+    this.buscarCliente.next(val);
+  }
+
+  onFocused(e: any) {
+    // do something when input is focused
+    console.log(e);
   }
 }
+// {
+//   "cliente": "Casa del insudstrial sa de cv",
+//   "no_registro": "818-4",
+//   "nit": "0614-120783-003",
+//   "Municipio": {
+//     "id_municipio": 214,
+//     "nombre": "San Salvador",
+//     "estado": "ACTIVO",
+//     "id_departamento": 6,
+//     "Departamento": {
+//       "id_departamento": 6,
+//       "nombre": "San Salvador",
+//       "codigo_iso": "SV-SS",
+//       "estado": "ACTIVO"
+//     }
+//   },
+//   "giro": "Venta al por mayor de otros tipos de maquinaria"
+// }
