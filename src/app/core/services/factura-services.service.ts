@@ -35,4 +35,17 @@ export class FacturaServicesService {
   obtenerMunicipios(id:any) {
     return this.http.get(`${this.endpoint}/obtener_municipios/${id}`);
   } 
+
+  
+  getInvoiceData(desde:any, hasta: any) {
+    return this.http.get(`${this.endpoint}/obtener_listado_facturas?desde=${desde}&hasta=${hasta}`);
+  } 
+
+  getInvoice(id:any) {
+    return this.http.get(`${this.endpoint}/obtener_factura/${id}`);
+  } 
+
+  deleteInvoice(id:any) {
+    return this.http.delete(`${this.endpoint}/anular_factura/${id}`);
+  } 
 }

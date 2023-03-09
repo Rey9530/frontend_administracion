@@ -11,9 +11,29 @@ const routes: Routes = [
     path: "",
     pathMatch: "full",
     redirectTo: "/auth/login",
-  }, 
-  { path: 'admin', component: LayoutComponent, loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule), canActivate: [AuthGuard] },
-  { path: 'facturacion', component: LayoutComponent, loadChildren: () => import('./facturacion/facturacion.module').then(m => m.FacturacionModule), canActivate: [AuthGuard] },
+  },
+  {
+    path: "admin",
+    component: LayoutComponent,
+    loadChildren: () =>
+      import("./admin/admin.module").then((m) => m.AdminModule),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: "reportes",
+    loadChildren: () =>
+      import("./reportes/reportes.module").then((m) => m.ReportesModule),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: "facturacion",
+    component: LayoutComponent,
+    loadChildren: () =>
+      import("./facturacion/facturacion.module").then(
+        (m) => m.FacturacionModule
+      ),
+    canActivate: [AuthGuard],
+  },
   {
     path: "auth",
     loadChildren: () =>
@@ -26,7 +46,6 @@ const routes: Routes = [
   },
   { path: "**", pathMatch: "full", redirectTo: "/errors/404" },
 ];
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

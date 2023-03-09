@@ -1,1 +1,466 @@
-<p>ver-listado-facturas works!</p>
+<div class="row">
+  <div class="col-xl-3 col-md-6">
+    <!-- card -->
+    <div class="card card-animate">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="flex-grow-1">
+            <p class="text-uppercase fw-medium text-muted mb-0">
+              Total Facturado
+            </p>
+          </div>
+          <div class="flex-shrink-0">
+            <h5 class="text-info fs-14 mb-0">100.00 %</h5>
+          </div>
+        </div>
+        <div class="d-flex align-items-end justify-content-between mt-4">
+          <div>
+            <h4 class="fs-22 fw-semibold ff-secondary mb-4">
+              <!-- $<span
+                [CountTo]="service.total_facturado"
+                class="counter-value"
+                [from]="0"
+                [duration]="0.01"
+              ></span
+              > -->
+              {{ service.total_facturado | currency }}
+            </h4>
+            <span class="badge bg-warning me-1">
+              {{ service.total_facturas }}
+            </span>
+            <span class="text-muted"> Total Facturas</span>
+          </div>
+          <div class="avatar-sm flex-shrink-0">
+            <span class="avatar-title bg-light rounded fs-3">
+              <i-feather
+                name="file-text"
+                class="text-success icon-dual-success feather-icon-align"
+              >
+              </i-feather>
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- end card body -->
+    </div>
+    <!-- end card -->
+  </div>
+  <!-- end col -->
+
+  <div class="col-xl-3 col-md-6">
+    <!-- card -->
+    <div class="card card-animate">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="flex-grow-1">
+            <p class="text-uppercase fw-medium text-muted mb-0">
+              Consumidor Final
+            </p>
+          </div>
+          <div class="flex-shrink-0">
+            <h5 class="text-success fs-14 mb-0">
+              <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +{{
+                service.porcentaje_consumidor_final
+              }}
+              %
+            </h5>
+          </div>
+        </div>
+        <div class="d-flex align-items-end justify-content-between mt-4">
+          <div>
+            <h4 class="fs-22 fw-semibold ff-secondary mb-4">
+              <!-- $<span
+                [CountTo]="409.66"
+                class="counter-value"
+                [from]="0"
+                [duration]="1"
+              ></span
+              >k -->
+
+              {{ service.total_consumidor_final | currency }}
+            </h4>
+            <span class="badge bg-warning me-1">{{
+              service.total_facturas_consumidor_final
+            }}</span>
+            <span class="text-muted"> Facturas</span>
+          </div>
+          <div class="avatar-sm flex-shrink-0">
+            <span class="avatar-title bg-light rounded fs-3">
+              <i-feather
+                name="check-square"
+                class="text-success icon-dual-success feather-icon-align"
+              >
+              </i-feather>
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- end card body -->
+    </div>
+    <!-- end card -->
+  </div>
+  <!-- end col -->
+
+  <div class="col-xl-3 col-md-6">
+    <!-- card -->
+    <div class="card card-animate">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="flex-grow-1">
+            <p class="text-uppercase fw-medium text-muted mb-0">
+              Credito Fiscal
+            </p>
+          </div>
+          <div class="flex-shrink-0">
+            <h5 class="text-success fs-14 mb-0">
+              <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +{{
+                service.porcentaje_credito_fiscal
+              }}
+              %
+            </h5>
+          </div>
+        </div>
+        <div class="d-flex align-items-end justify-content-between mt-4">
+          <div>
+            <h4 class="fs-22 fw-semibold ff-secondary mb-4">
+              <!-- $<span
+                [CountTo]="136.98"
+                class="counter-value"
+                [from]="0"
+                [duration]="1"
+              ></span
+              >k -->
+
+              {{ service.total_credito_fiscal | currency }}
+            </h4>
+            <span class="badge bg-warning me-1">{{
+              service.total_facturas_credito_fiscal
+            }}</span>
+            <span class="text-muted"> Facturas</span>
+          </div>
+          <div class="avatar-sm flex-shrink-0">
+            <span class="avatar-title bg-light rounded fs-3">
+              <i-feather
+                name="check-square"
+                class="text-success icon-dual-success feather-icon-align"
+              >
+              </i-feather>
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- end card body -->
+    </div>
+    <!-- end card -->
+  </div>
+  <!-- end col -->
+
+  <div class="col-xl-3 col-md-6">
+    <!-- card -->
+    <div class="card card-animate">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="flex-grow-1">
+            <p class="text-uppercase fw-medium text-muted mb-0">
+              Facturas Anuladas
+            </p>
+          </div>
+          <div class="flex-shrink-0">
+            <h5 class="text-danger fs-14 mb-0">
+              <i class="ri-arrow-right-down-line fs-13 align-middle"></i>
+              {{ service.porcentaje_anuladas }}%
+            </h5>
+          </div>
+        </div>
+        <div class="d-flex align-items-end justify-content-between mt-4">
+          <div>
+            <h4 class="fs-22 fw-semibold ff-secondary mb-4">
+              <!-- $<span
+                [CountTo]="84.2"
+                class="counter-value"
+                [from]="0"
+                [duration]="1"
+              ></span
+              >k -->
+
+              {{ service.total_anuladas | currency }}
+            </h4>
+            <span class="badge bg-warning me-1">{{
+              service.total_facturas_anuladas
+            }}</span>
+            <span class="text-muted"> Facturas</span>
+          </div>
+          <div class="avatar-sm flex-shrink-0">
+            <span class="avatar-title bg-light rounded fs-3">
+              <i-feather
+                name="x-octagon"
+                class="text-danger icon-dual-danger feather-icon-align"
+              >
+              </i-feather>
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- end card body -->
+    </div>
+    <!-- end card -->
+  </div>
+  <!-- end col -->
+</div>
+<!-- end row-->
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card" id="invoiceList">
+      <div class="card-header border-0">
+        <div class="d-flex align-items-center">
+          <h5 class="card-title mb-0 flex-grow-1">Invoices</h5>
+           
+        </div>
+      </div>
+      <div
+        class="card-body bg-soft-light border border-dashed border-start-0 border-end-0"
+      >
+        <div class="row g-3">
+          <div class="col-xxl-5 col-sm-12">
+            <div class="search-box">
+              <input
+                type="text"
+                name="searchTerm"
+                class="form-control search bg-light border-light"
+                placeholder="Buscar por nombre del cliente o numero de factura..."
+                [(ngModel)]="service.searchTerm"
+              />
+              <i class="ri-search-line search-icon"></i>
+            </div>
+          </div>
+          <!--end col-->
+          <div class="col-xxl-3 col-sm-4">
+            <input
+              class="form-control bg-light border-light"
+              type="text"
+              mwlFlatpickr
+              [altInput]="true"
+              [convertModelValue]="true"
+              locale="es"
+              placeholder="Seleccione fecha"
+              id="isDate"
+              [(ngModel)]="service.date"
+              mode="range"
+            />
+          </div>
+          <!--end col-->
+          <div class="col-xxl-3 col-sm-4">
+            <div class="input-light">
+              <select
+                class="form-control bg-light border-light"
+                data-choices
+                data-choices-search-false
+                name="choices-single-default"
+                id="idStatus"
+                [(ngModel)]="service.status"
+              >
+                <option value="0" selected>TODAS</option>
+                <option value="ACTIVO">ACTIVAS</option>
+                <option value="ANULADA">ANULADA</option>
+              </select>
+            </div>
+          </div>
+          <!--end col-->
+
+          <div class="col-xxl-1 col-sm-4">
+            <button
+              type="button"
+              class="btn btn-primary w-100"
+              (click)="SearchData()"
+            >
+              <i class="ri-equalizer-fill me-1 align-bottom"></i> Filtrar
+            </button>
+          </div>
+          <!--end col-->
+        </div>
+        <!--end row-->
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="table-responsive table-card">
+            <table class="table align-middle table-nowrap" id="invoiceTable">
+              <thead class="text-muted">
+                <tr> 
+                  <th class="sort text-uppercase" data-sort="invoice_id">#</th>
+                  <th class="sort text-uppercase" data-sort="customer_name">
+                    Cliente
+                  </th>
+                  <th class="sort text-uppercase" data-sort="email">Tipo</th>
+                  <th class="sort text-uppercase" data-sort="date">Fecha</th>
+                  <th class="sort text-uppercase" data-sort="invoice_amount">
+                    Total
+                  </th>
+                  <th class="sort text-uppercase" data-sort="status">Estado</th>
+                  <th class="sort text-uppercase" data-sort="action">
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="list form-check-all">
+                <tr *ngFor="let data of invoices" id="i_{{ data.id_factura }}">
+                   
+                  <td>
+                    <ngb-highlight
+                      [result]="data.numero_factura"
+                      [term]="service.searchTerm"
+                    >
+                    </ngb-highlight>
+                  </td>
+                  <td class="customer_name">
+                    <div class="d-flex align-items-center">
+                      <div class="flex-shrink-0 avatar-xs me-2">
+                        <div
+                          class="avatar-title bg-soft-success text-success rounded-circle fs-13"
+                        >
+                          {{ data.cliente.charAt(0) }}
+                        </div>
+                      </div>
+                      {{ data.cliente }}
+                    </div>
+                  </td>
+                  <td>
+                    <ngb-highlight
+                      [result]="data.Bloque.Tipo.nombre"
+                      [term]="service.searchTerm"
+                    >
+                    </ngb-highlight>
+                  </td>
+                  <td class="date">
+                    {{ data.fecha_creacion.split("T")[0] }}
+
+                    <!-- {{ data.fecha_creacion | date : "longDate":'6000':'es'  }} <br>
+                    <small class="text-muted">{{ data.fecha_creacion | date : "shortTime" }}</small> -->
+                  </td>
+                  <td>
+                    <!-- <ngb-highlight
+                      [result]=""
+                      [term]="service.searchTerm"
+                    > 
+                    </ngb-highlight> -->
+                    {{ data.total | currency }}
+                  </td>
+                  <td class="status">
+                    <span
+                      class="badge text-uppercase"
+                      [ngClass]="{
+                        'badge-soft-success': data.estado === 'ACTIVO',
+                        'badge-soft-danger': data.estado === 'ANULADA'
+                      }"
+                      >{{ data.estado }}</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      class="btn btn-danger"
+                      (click)="
+                        confirm(
+                          deleteModel,
+                          data.id_factura,
+                          data.numero_factura
+                        )
+                      "
+                      ><i class="ri-delete-bin-7-line"></i
+                    ></a>
+                    <a
+                      class="btn btn-info m-1" 
+                      [routerLink]="'/facturacion/factura/'+data.id_factura"
+                      ><i class="ri-eye-line"></i
+                    ></a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div
+            class="row justify-content-md-between align-items-md-center mt-3"
+          >
+            <div class="col col-sm-6">
+              <div
+                class="dataTables_info mb-2"
+                id="tickets-table_info"
+                role="status"
+                aria-live="polite"
+              >
+                Showing
+                {{ service.startIndex }} to {{ service.endIndex }} of
+                {{ service.totalRecords }}
+                entries
+              </div>
+            </div>
+            <!-- Pagination -->
+            <div class="col col-sm-6">
+              <div class="text-sm-right float-sm-end listjs-pagination">
+                <ngb-pagination
+                  [collectionSize]="(total | async)!"
+                  [(page)]="service.page"
+                  [pageSize]="service.pageSize"
+                >
+                </ngb-pagination>
+              </div>
+            </div>
+            <!-- End Pagination -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="elmLoader">
+      <div class="spinner-border text-primary avatar-sm" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </div>
+  <!--end col-->
+</div>
+<!--end row-->
+
+<!-- removeItemModal -->
+<ng-template #deleteModel let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+        id="btn-close"
+        (click)="modal.dismiss('Cross click')"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <div class="mt-2 text-center">
+        <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+          <h4>¿Esta seguro en anular la factura ?</h4>
+          <p class="text-muted mx-4 mb-0">
+            Esta por anular la factura #{{ numeroFactura }}.
+          </p>
+        </div>
+      </div>
+      <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+        <button
+          class="btn btn-link link-success fw-medium text-decoration-none"
+          data-bs-dismiss="modal"
+          id="deleteRecord-close"
+          (click)="modal.close('Close click')"
+        >
+          <i class="ri-close-line me-1 align-middle"></i> Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn w-sm btn-danger"
+          id="delete-product"
+          (click)="deleteData(deleteId)"
+          (click)="modal.close('Close click')"
+        >
+          Si, Anular!
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- /.modal-content -->
+</ng-template>

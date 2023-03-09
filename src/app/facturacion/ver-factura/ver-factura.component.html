@@ -1,0 +1,286 @@
+<div
+  class="row justify-content-center"
+  *ngIf="!showView; else loadingContainer"
+>
+  <div class="col-xxl-9">
+    <div class="card" id="demo">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card-header border-bottom-dashed p-4">
+            <div class="d-flex flex-wrap">
+              <div class="flex-grow-1">
+                <img
+                  src="assets/images/logo-dark.png"
+                  class="card-logo card-logo-dark"
+                  alt="logo dark"
+                  height="17"
+                />
+                <img
+                  src="assets/images/logo-light.png"
+                  class="card-logo card-logo-light"
+                  alt="logo light"
+                  height="17"
+                />
+                <div class="mt-sm-5 mt-4">
+                  <h6 class="text-muted text-uppercase fw-semibold">Dirección</h6>
+                  <p class="text-muted mb-1" id="address-details">
+                    {{ data.data_sistema.direccion }}
+                  </p> 
+                </div>
+              </div>
+              <div class="flex-shrink-0 mt-sm-0 mt-3">
+                <h6>
+                    <span class="text-muted fw-normal">Giro: </span
+                    ><span id="legal-register-no">{{
+                        data.data_sistema.razon
+                    }}</span>
+                  </h6>
+                  <h6>
+                    <span class="text-muted fw-normal">NIT: </span
+                    ><span id="legal-register-no">{{ data.data_sistema.nit }}</span>
+                  </h6>
+
+                  <h6>
+                    <span class="text-muted fw-normal">NRC: </span
+                    ><span id="legal-register-no">{{ data.data_sistema.nrc }}</span>
+                  </h6>
+              </div>
+            </div>
+          </div>
+          <!--end card-header-->
+        </div>
+        <!--end col-->
+        <div class="col-lg-12">
+          <div class="card-body p-4">
+            <div class="row g-3">
+              <div class="col-lg-3 col-6">
+                <p class="text-muted mb-2 text-uppercase fw-semibold">
+                    Número de Factura
+                </p>
+                <h5 class="fs-14 mb-0">
+                  #<span id="invoice-no">  {{ data.data.numero_factura }} </span>
+                </h5>
+              </div>
+              <!--end col-->
+              <div class="col-lg-3 col-6">
+                <p class="text-muted mb-2 text-uppercase fw-semibold">Fecha </p>
+                <h5 class="fs-14 mb-0">
+                  <span id="invoice-date">{{ data.data.fecha_creacion.split("T")[0] }}</span>
+                  <small class="text-muted" id="invoice-time">02:36PM</small>
+                </h5>
+              </div>
+              <!--end col-->
+              <div class="col-lg-3 col-6">
+                <p class="text-muted mb-2 text-uppercase fw-semibold">
+                  Tipo de Factura
+                </p>
+                <span class="badge badge-soft-success fs-11" id="payment-status"
+                  >{{ data.data.Bloque.Tipo.nombre }}</span
+                >
+              </div>
+              <!--end col-->
+              <div class="col-lg-3 col-6">
+                <p class="text-muted mb-2 text-uppercase fw-semibold">
+                  Total Amount
+                </p>
+                <h5 class="fs-14 mb-0">
+                  <span id="total-amount">{{ data.data.total | currency }}</span>
+                </h5>
+              </div>
+              <!--end col-->
+            </div>
+            <!--end row-->
+          </div>
+          <!--end card-body-->
+        </div>
+        <!--end col-->
+        <div class="col-lg-12">
+          <div class="card-body p-4 border-top border-top-dashed">
+
+            <div class="row">
+                <div class="col-12">
+                  <div>
+                    <h5 class="text-uppercase fw-semibold">Datos del cliente</h5>
+                  </div>
+                </div>
+            </div>
+    
+            
+            <div class="row g-3 mb-4">
+              <div class="col-md-3">
+                <h6 class="text-muted text-uppercase fw-semibold mb-1">
+                  Cliente:
+                </h6>
+                <p class="text-muted fw-medium mb-2" id="billing-name">{{ data.data.cliente  }}</p> 
+              </div> 
+
+              <div class="col-md-9">
+                <h6 class="text-muted text-uppercase fw-semibold mb-1">
+                  Dirección:
+                </h6>
+                <p class="text-muted fw-medium mb-2" id="billing-name">{{ data.data.direccion }}</p> 
+              </div> 
+            </div>
+
+
+            <div class="row g-3 mb-2" *ngIf="data.data.Bloque.Tipo.id_tipo_factura==2">
+                <div class="col-md-3">
+                  <h6 class="text-muted text-uppercase fw-semibold mb-1">
+                    Departamento
+                  </h6>
+                  <p class="text-muted fw-medium mb-2" id="billing-name">{{ data.data.Municipio.Departamento.nombre }}</p> 
+                </div> 
+  
+                <div class="col-md-3">
+                  <h6 class="text-muted text-uppercase fw-semibold mb-1">
+                    Municipio
+                  </h6>
+                  <p class="text-muted fw-medium mb-2" id="billing-name">{{ data.data.Municipio.nombre }}</p> 
+                </div> 
+
+
+  
+                <div class="col-md-3">
+                    <h6 class="text-muted text-uppercase fw-semibold mb-1">
+                        NRC
+                    </h6>
+                    <p class="text-muted fw-medium mb-2" id="billing-name">{{ data.data.no_registro }}</p> 
+                </div> 
+                <div class="col-md-3">
+                    <h6 class="text-muted text-uppercase fw-semibold mb-1">
+                        NIT
+                    </h6>
+                    <p class="text-muted fw-medium mb-2" id="billing-name">{{ data.data.nit }}</p> 
+                </div> 
+                <div class="col-md-3">
+                    <h6 class="text-muted text-uppercase fw-semibold mb-1">
+                        GIRO
+                    </h6>
+                    <p class="text-muted fw-medium mb-2" id="billing-name">{{ data.data.giro }}</p> 
+                </div> 
+              </div>
+            <!--end row-->
+          </div>
+          <!--end card-body-->
+        </div>
+        <!--end col-->
+        <div class="col-lg-12">
+          <div class="card-body p-4">
+            <div class="table-responsive">
+              <table
+                class="table table-borderless text-center table-nowrap align-middle mb-0"
+              >
+                <thead>
+                  <tr class="table-active">
+                    <th scope="col" style="width: 50px">#</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col" style="width: 120px">Cantidad</th>
+                    <th scope="col" style="width: 120px">Precio U.</th>
+                    <th scope="col" style="width: 120px" class="text-end">Descuento</th>
+                    <th scope="col" style="width: 130px" class="text-end">Total</th>
+                  </tr>
+                </thead>
+                <tbody id="products-list">
+                  <tr *ngFor="let item of data.data.FacturasDetalle; let i = index">
+                    <th scope="row"> {{i+1}} </th>
+                    <td class="text-start">
+                      <span class="fw-medium"> {{ item.nombre }} </span>
+                      <p class="text-muted mb-0" *ngIf="(item.descripcion!=null && item.descripcion.length>0)" >
+                        {{ item.descripcion }}
+                      </p>
+                    </td>
+                    <td>{{ item.cantidad }}</td>
+                    <td *ngIf="data.data.Bloque.Tipo.id_tipo_factura==2">
+                        {{ item.precio_sin_iva | currency }}
+                    </td>
+                    <td *ngIf="data.data.Bloque.Tipo.id_tipo_factura==1">
+                        {{ item.precio_con_iva | currency }}
+                    </td>
+                    <td class="text-end">{{ item.descuento | currency  }}</td>
+                    <td class="text-end">{{ item.total | currency  }}</td>
+                  </tr> 
+                </tbody>
+              </table>
+              <!--end table-->
+            </div>
+            <div class="border-top border-top-dashed mt-2">
+                <table  class="table table-borderless table-nowrap align-middle mb-0 ms-auto">
+                    <tr>
+                        <td>
+
+                            <div class="mt-3">
+                                <h6 class="text-muted text-uppercase fw-semibold ">
+                                  FORMAS DE PAGO:
+                                </h6>
+                                <p class="  mb-1"> 
+                                  <span class="fw-medium" id="payment-method">{{ data.data.Metodo.nombre }}</span>
+                                </p> 
+                              </div>
+                        </td>
+                        <td>
+                            <table
+                              class="table table-borderless table-nowrap align-middle mb-0 ms-auto"
+                              style="width: 250px"
+                            >
+                              <tbody>
+                                <tr>
+                                  <td>Sub Total</td>
+                                  <td class="text-end"> {{ data.data.subtotal | currency }} </td>
+                                </tr>
+                                <tr *ngIf="data.data.Bloque.Tipo.id_tipo_factura==2">
+                                  <td>IVA (13%)</td>
+                                  <td class="text-end">{{ data.data.iva | currency }}</td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    Descuento
+                                  </td>
+                                  <td class="text-end">- {{ data.data.descuento | currency }}</td>
+                                </tr> 
+                                <tr class="border-top border-top-dashed fs-15">
+                                  <th scope="row">Monto Total</th>
+                                  <th class="text-end">{{ data.data.total | currency }}</th>
+                                </tr>
+                              </tbody>
+                            </table>
+
+                        </td>
+                    </tr>
+                </table>
+              <!--end table-->
+            </div> 
+            <div class="hstack gap-2 justify-content-end d-print-none mt-4">
+              <a (click)="back()" class="btn btn-success"
+                ><i class=" ri-arrow-left-s-line align-bottom me-1"></i> Regresar</a
+              >
+              <!-- <a href="javascript:void(0);" class="btn btn-primary"
+                ><i class="ri-download-2-line align-bottom me-1"></i>
+                Download</a
+              > -->
+            </div>
+          </div>
+          <!--end card-body-->
+        </div>
+        <!--end col-->
+      </div>
+      <!--end row-->
+    </div>
+    <!--end card-->
+  </div>
+  <!--end col-->
+</div>
+<!--end row-->
+
+<ng-template #loadingContainer>
+  <div class="row">
+    <div class="col-12 text-center">
+      <div
+        class="spinner-border mt-5"
+        style="width: 3rem; height: 3rem"
+        role="status"
+      >
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  </div>
+</ng-template>
