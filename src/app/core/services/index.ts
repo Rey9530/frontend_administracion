@@ -7,3 +7,4 @@ export * from './auth.service';
 export * from './factura-services.service';
 export * from './descuentos-services.service';
 export * from './navigation.service';
+export * from './cliente-services.service';

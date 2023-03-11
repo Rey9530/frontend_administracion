@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router'; 
+import { ClientesComponent } from './clientes/clientes.component';
 import { CrearFacturaComponent } from './crear-factura/crear-factura.component';
 import { VerFacturaComponent } from './ver-factura/ver-factura.component';
 import { VerListadoFacturasComponent } from './ver-listado-facturas/ver-listado-facturas.component';
@@ -24,6 +25,10 @@ const routes: Routes = [
   {
     path: "factura/:id",
     component: VerFacturaComponent
+  }, 
+  {
+    path: "clientes",
+    component: ClientesComponent
   }, 
 ];
 

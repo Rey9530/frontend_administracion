@@ -29,6 +29,9 @@
         "FACTCONFIG": "Facturacion"
       }
     }, 
+    "CLIENTE": {
+      "TEXT": "Clientes"
+    },
     "FACTURACION": {
       "TEXT": "Facturacion",
       "BADGE": "Nuevo",

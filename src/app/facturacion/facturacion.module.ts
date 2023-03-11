@@ -22,6 +22,7 @@ import {
 import { defineElement } from "lord-icon-element";
 import lottie from "lottie-web";
 import { VerFacturaComponent } from './ver-factura/ver-factura.component';
+import { ClientesComponent } from './clientes/clientes.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { VerFacturaComponent } from './ver-factura/ver-factura.component';
     VerListadoFacturasComponent,
     ToastsContainerFacturacion,
     VerFacturaComponent,
+    ClientesComponent,
   ],
   imports: [
     CommonModule,

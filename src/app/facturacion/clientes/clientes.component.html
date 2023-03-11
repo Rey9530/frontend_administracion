@@ -1,0 +1,430 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title mb-0">Clientes</h4>
+      </div>
+      <!-- end card header -->
+
+      <div class="card-body">
+        <div id="customerList">
+          <div class="row g-4 mb-3">
+            <div class="col-sm-auto">
+              <div class="d-flex gap-1">
+                <button
+                  type="button"
+                  class="btn btn-success add-btn"
+                  data-bs-toggle="modal"
+                  id="create-btn"
+                  data-bs-target="#showModal"
+                  (click)="openModal(content)"
+                >
+                  <i class="ri-add-line align-bottom me-1"></i> Nuevo
+                </button>
+                <div class="m-3"></div>
+                <div
+                  class="spinner-border text-success"
+                  role="status"
+                  *ngIf="service.isLoading"
+                >
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm">
+              <div class="d-flex justify-content-sm-end">
+                <div class="search-box ms-2">
+                  <input
+                    type="text"
+                    class="form-control search"
+                    placeholder="Search..."
+                    [(ngModel)]="service.searchTerm"
+                  />
+                  <i class="ri-search-line search-icon"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive table-card mt-3 mb-1">
+            <table class="table">
+              <thead>
+                <tr class="bg-light text-muted">
+                  <th scope="col" style="width: 50px">#</th>
+                  <th class="sort" data-sort="customer_name">Nombre</th>
+                  <th class="sort" data-sort="email">Correo</th>
+                  <th class="sort" data-sort="phone">Teléfono</th>
+                  <th class="sort" data-sort="date">Fecha de Registro</th>
+                  <th class="sort" data-sort="status">Razón social</th>
+                  <th class="sort">Opciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let data of ListJsDatas; let i = index"
+                  id="lj_{{ data.id_cliente }}"
+                >
+                  <th scope="row">
+                    {{ i + 1 + (service.page - 1) * 10 }}
+                  </th>
+                  <td>
+                    <ngb-highlight
+                      [result]="data.nombre"
+                      [term]="service.searchTerm"
+                    ></ngb-highlight>
+                  </td>
+                  <td>
+                    <ngb-highlight
+                      [result]="data.correo"
+                      [term]="service.searchTerm"
+                    ></ngb-highlight>
+                  </td>
+                  <td>
+                    <ngb-highlight
+                      [result]="data.telefono"
+                      [term]="service.searchTerm"
+                    ></ngb-highlight>
+                  </td>
+                  <td>
+                    {{ data.fecha_creacion.split("T")[0] }}
+                  </td>
+                  <td class="status">
+                    <ngb-highlight
+                      [result]="data.razon_social"
+                      [term]="service.searchTerm"
+                    ></ngb-highlight>
+                  </td>
+                  <td>
+                    <div class="d-flex gap-2">
+                      <div class="edit">
+                        <button
+                          class="btn btn-sm btn-success edit-item-btn"
+                          data-bs-toggle="modal"
+                          data-bs-target="#showModal"
+                          (click)="editModal(content, data.id_cliente)"
+                        >
+                          Editar
+                        </button>
+                      </div>
+                      <div class="remove">
+                        <button
+                          class="btn btn-sm btn-danger remove-item-btn"
+                          data-bs-toggle="modal"
+                          data-bs-target="#deleteRecordModal"
+                          (click)="confirm(deleteModel, data.id_cliente)"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="row justify-content-md-between align-items-md-center">
+            <div class="col col-sm-6">
+              <div
+                class="dataTables_info mb-2"
+                id="tickets-table_info"
+                role="status"
+                aria-live="polite"
+              >
+                Showing
+                {{ service.startIndex }} to {{ service.endIndex }} of
+                {{ service.totalRecords }}
+                entries
+              </div>
+            </div>
+            <!-- Pagination -->
+            <div class="col col-sm-6">
+              <div class="text-sm-right float-sm-end listjs-pagination">
+                <ngb-pagination
+                  [collectionSize]="service.totalRecords"
+                  [(page)]="service.page"
+                  [pageSize]="service.pageSize"
+                >
+                </ngb-pagination>
+              </div>
+            </div>
+            <!-- End Pagination -->
+          </div>
+        </div>
+      </div>
+      <!-- end card -->
+    </div>
+    <!-- end col -->
+  </div>
+  <!-- end col -->
+</div>
+<!-- end row -->
+
+<!-- Add ListJs Data -->
+<ng-template #content role="document" let-modal>
+  <div class="modal-header bg-light p-3">
+    <h5 class="modal-title" id="exampleModalLabel">Cliente</h5>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="modal"
+      aria-label="Close"
+      id="close-modal"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <form
+    (ngSubmit)="saveListJs()"
+    [formGroup]="listJsForm"
+    class="tablelist-form"
+    autocomplete="off"
+  >
+    <div class="modal-body">
+      <div class="mb-1">
+        <label for="nombre-field" class="form-label">Nombre</label>
+        <input
+          type="text"
+          id="nombre-field"
+          class="form-control"
+          placeholder="Ingrese un nombre"
+          required
+          formControlName="nombre"
+          [ngClass]="{
+            'is-invalid': submitted && form['nombre'].errors
+          }"
+        />
+        <div class="invalid-feedback">Please enter a customer name.</div>
+      </div>
+
+      <div class="mb-1">
+        <label for="correo-field" class="form-label">Correo </label>
+        <input
+          type="correo"
+          id="correo-field"
+          class="form-control"
+          placeholder="Ingrese un correo"
+          formControlName="correo"
+          [ngClass]="{ 'is-invalid': submitted && form['correo'].errors }"
+        />
+        <div class="invalid-feedback">Por favor ingrese un correo valido.</div>
+      </div>
+
+      <div class="mb-1">
+        <label for="telefono-field" class="form-label">Telefono</label>
+        <input
+          type="text"
+          id="telefono-field"
+          class="form-control"
+          placeholder="Ingrese un numero de telefono."
+          formControlName="telefono"
+          [ngClass]="{ 'is-invalid': submitted && form['telefono'].errors }"
+        />
+        <div class="invalid-feedback">Ingrese un numero de telefono.</div>
+      </div>
+
+      <div class="mb-1">
+        <label for="giro-field" class="form-label">Giro</label>
+        <input
+          type="text"
+          id="giro-field"
+          class="form-control"
+          placeholder="Ingrese un giro."
+          formControlName="giro"
+          [ngClass]="{ 'is-invalid': submitted && form['giro'].errors }"
+        />
+      </div>
+
+      <div class="mb-1">
+        <label for="razon_social-field" class="form-label">Razon Social</label>
+        <input
+          type="text"
+          id="razon_social-field"
+          class="form-control"
+          placeholder="Ingrese una razon social."
+          formControlName="razon_social"
+          [ngClass]="{ 'is-invalid': submitted && form['razon_social'].errors }"
+        />
+      </div>
+
+      <div class="mb-1">
+        <label for="registro_nrc-field" class="form-label">No NRC</label>
+        <input
+          type="text"
+          id="registro_nrc-field"
+          class="form-control"
+          placeholder="Ingrese un No NRC."
+          formControlName="registro_nrc"
+          [ngClass]="{ 'is-invalid': submitted && form['registro_nrc'].errors }"
+        />
+      </div>
+
+      <div class="mb-1">
+        <label for="formFile-field" class="form-label">Foto Documento</label>
+        <input
+          class="form-control"
+          type="file"
+          id="formFile-field"
+          (change)="cargar_files($event)"
+          accept="image/jpeg,image/jpg,image/png"
+        />
+      </div>
+
+      <div class="mb-1">
+        <label for="nit-field" class="form-label">No NIT</label>
+        <input
+          type="text"
+          id="nit-field"
+          class="form-control"
+          placeholder="Ingrese un No NIT."
+          formControlName="nit"
+          [ngClass]="{ 'is-invalid': submitted && form['nit'].errors }"
+        />
+      </div>
+
+      <div class="mb-1">
+        <label for="dui-field" class="form-label">DUI</label>
+        <input
+          type="text"
+          id="dui-field"
+          class="form-control"
+          placeholder="Ingrese DUI."
+          formControlName="dui"
+          [ngClass]="{ 'is-invalid': submitted && form['dui'].errors }"
+        />
+      </div>
+
+      <div class="mb-1">
+        <label for="departamento-field" class="form-label">Departamento</label>
+        <select
+          class="form-control"
+          data-trigger
+          name="departamento-field"
+          id="statdepartamentous-field"
+          formControlName="id_departamento"
+          (change)="obtenerMunicipios(departamento.value)"
+          #departamento
+        >
+          <option value="">Departamentos..</option>
+          <option
+            *ngFor="let item of listadoDepartamentos"
+            value="{{ item.id_departamento }}"
+          >
+            {{ item.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="mb-1">
+        <label for="municipio-field" class="form-label">Municipio</label>
+        <select
+          class="form-control"
+          data-trigger
+          name="municipio-field"
+          id="municipio-field"
+          formControlName="id_municipio"
+          [ngClass]="{ 'is-invalid': submitted && form['id_municipio'].errors }"
+        >
+          <option value="">Municipios..</option>
+          <option
+            *ngFor="let item of listadoMunicipios"
+            value="{{ item.id_municipio }}"
+          >
+            {{ item.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div>
+        <label for="direccion-field" class="form-label">Dirección</label>
+        <input
+          type="text"
+          id="direccion-field"
+          class="form-control"
+          placeholder="Ingrese una direccón."
+          formControlName="direccion"
+          [ngClass]="{ 'is-invalid': submitted && form['direccion'].errors }"
+        />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="hstack gap-2 justify-content-end">
+        <button
+          type="button"
+          class="btn btn-light"
+          data-bs-dismiss="modal"
+          (click)="modal.close('Close click')"
+        >
+          Cancelar
+        </button>
+        <div class="spinner-border text-success" role="status" *ngIf="loading">
+          <span class="sr-only">Cargando...</span>
+        </div>
+        <button
+          type="submit"
+          class="btn btn-success"
+          id="add-btn"
+          *ngIf="!loading"
+        >
+          Procesar
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<!-- removeItemModal -->
+<ng-template #deleteModel let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+        id="btn-close"
+        (click)="modal.dismiss('Cross click')"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <div class="mt-2 text-center">
+        <lord-icon
+          src="https://cdn.lordicon.com/gsqxdxog.json"
+          trigger="loop"
+          colors="primary:#405189,secondary:#f06548"
+          style="width: 90px; height: 90px"
+        ></lord-icon>
+        <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+          <h4>¿Esta seguro?</h4>
+          <p class="text-muted mx-4 mb-0">
+            Esta por eliminar a un cliente permanentemente.
+          </p>
+        </div>
+      </div>
+      <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+        <button
+          class="btn btn-link link-success fw-medium text-decoration-none"
+          data-bs-dismiss="modal"
+          (click)="modal.close('Close click')"
+        >
+          <i class="ri-close-line me-1 align-middle"></i> Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn w-sm btn-danger"
+          id="delete-product"
+          (click)="deleteData(deleteId)"
+          (click)="modal.close('Close click')"
+        >
+          Si, Eliminar!
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- /.modal-content -->
+</ng-template>
+
+<!-- end auth-page-wrapper -->
+<app-toasts-facturacion
+  aria-live="polite"
+  aria-atomic="true"
+></app-toasts-facturacion>
