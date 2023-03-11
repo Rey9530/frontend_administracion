@@ -92,10 +92,10 @@ export class CrearFacturaComponent implements OnInit {
     this.rearmarFormulario(1);
   }
   execKeypress($event: any, index: number) {
-    this.itemSeleccionado = index; 
+    this.itemSeleccionado = index;
     // When remote, clear all items directly on keypress. Else we have an ugly lag because of the debounce time.
     if ($event.term.length < 3) return;
-    this.listadoCatalogosLoading[index]= true;
+    this.listadoCatalogosLoading[index] = true;
     this.searchSubject$.next($event.term);
   }
   seleccionarItem(data: any) {
@@ -128,7 +128,7 @@ export class CrearFacturaComponent implements OnInit {
     this.fechashow = this.date.toLocaleDateString("es-ES", options);
 
     this.debouncedPing$.subscribe((res: any) => {
-      this.listadoCatalogosLoading[this.itemSeleccionado]  =false;
+      this.listadoCatalogosLoading[this.itemSeleccionado] = false;
       if (res.status) {
         this.listadoDeCatalogos[this.itemSeleccionado] = res.data;
       } else {
@@ -206,7 +206,7 @@ export class CrearFacturaComponent implements OnInit {
       },
     });
   }
-  rearmarFormulario(id_: number) { 
+  rearmarFormulario(id_: number) {
     var valores = null;
     if (this.InvoicesForm != null) {
       valores = this.InvoicesForm.value;
@@ -529,7 +529,7 @@ export class CrearFacturaComponent implements OnInit {
       id_descuento: 0,
       iva: 0,
       total: 0,
-    }); 
+    });
     this.listadoCatalogosLoading.push(false);
   }
 
@@ -651,63 +651,41 @@ export class CrearFacturaComponent implements OnInit {
     this.listadoClientes = [];
   }
 
-  keyword = "cliente";
-  listadoClientes = [];
-
+  keyword = "nombre";
+  listadoClientes = []; 
   selectEvent(item: any) {
     // do something with selected item
-    const { Municipio, cliente, giro, nit, no_registro, direccion } = item;
+    const { Municipio, nombre, giro, nit, registro_nrc, direccion } = item;
 
     if (this.listadoDepartamentos.length == 0) {
       this.obtenerDEpartamentos();
     }
-    console.log(Municipio.id_departamento);
     if (Municipio.id_departamento > 0) {
-      this.obtenerMunicipios(Municipio.id_departamento);
+      this.listadoMunicipios = [{ ...Municipio }]; 
     }
     this.InvoicesForm.patchValue({
-      cliente,
+      cliente: nombre,
       giro,
       nit,
-      no_registro,
+      no_registro: registro_nrc,
       id_municipio: Municipio.id_municipio,
       id_departamento: Municipio.id_departamento,
       direccion,
-    }); 
+    });
   }
 
   onChangeSearch(val: any) {
     // fetch remote data from here
-    // And reassign the 'data' which is binded to 'data' property.
-    console.log(val);
-
+    // And reassign the 'data' which is binded to 'data' property. 
     this.InvoicesForm.patchValue({
-      cliente:val
-    }); 
+      cliente: val,
+    });
     if (val.length < 3) return;
     this.buscarCliente.next(val);
   }
 
   onFocused(e: any) {
     // do something when input is focused
-    console.log(e);
+    // console.log(e);
   }
 }
-// {
-//   "cliente": "Casa del insudstrial sa de cv",
-//   "no_registro": "818-4",
-//   "nit": "0614-120783-003",
-//   "Municipio": {
-//     "id_municipio": 214,
-//     "nombre": "San Salvador",
-//     "estado": "ACTIVO",
-//     "id_departamento": 6,
-//     "Departamento": {
-//       "id_departamento": 6,
-//       "nombre": "San Salvador",
-//       "codigo_iso": "SV-SS",
-//       "estado": "ACTIVO"
-//     }
-//   },
-//   "giro": "Venta al por mayor de otros tipos de maquinaria"
-// }

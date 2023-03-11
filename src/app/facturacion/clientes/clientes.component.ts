@@ -139,7 +139,7 @@ export class ClientesComponent {
    * @param content modal content
    */
   openModal(content: any) {
-    this.imagen =null;
+    this.imagen = null;
     this.listJsForm.reset();
     this.listJsForm.controls["id_"].setValue(0);
     this.submitted = false;
@@ -236,7 +236,7 @@ export class ClientesComponent {
    * Open modal
    * @param content modal content
    */
-  imagen:any=null;
+  imagen: any = null;
   editModal(content: any, id: any) {
     let cliente = this.service.listadoClientes.filter(
       (e) => e.id_cliente == id
@@ -246,12 +246,11 @@ export class ClientesComponent {
     if (id_departamento > 0) {
       let id_municipio =
         cliente.Municipio != null ? cliente.Municipio.id_municipio : "";
-      this.obtenerMunicipios(id_departamento);
-      setTimeout(() => {
-        this.listJsForm.controls["id_municipio"].setValue(id_municipio);
-      }, 2000);
+      // this.obtenerMunicipios(id_departamento);
+      this.listadoMunicipios = [{ ...cliente.Municipio }];
+      this.listJsForm.controls["id_municipio"].setValue(id_municipio);
     }
-    this.imagen =  cliente.foto_url_nrc;
+    this.imagen = cliente.foto_url_nrc;
 
     this.submitted = false;
     this.modalService.open(content, { size: "md", centered: true });

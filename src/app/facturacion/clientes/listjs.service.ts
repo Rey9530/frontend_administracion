@@ -30,7 +30,7 @@ interface State {
 const compare = (v1: string | number, v2: string | number) =>
   v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
 
-function sort(countries: any[], column: SortColumn, direction: string): any[] { 
+function sort(countries: any[], column: SortColumn, direction: string): any[] {
   if (direction === "" || column === "") {
     return countries;
   } else {
@@ -81,8 +81,8 @@ export class OrdersService {
 
   buscarCliente = new Subject<void>();
   debouncedCliente = this.buscarCliente.pipe(
-    debounceTime(1000),
-    switchMap(() => { 
+    debounceTime(1000), 
+    switchMap(() => {
       this.isLoading = true;
       return this.apiService.getAll(this.page, this.pageSize, this.searchTerm);
     })
@@ -106,30 +106,31 @@ export class OrdersService {
         this._total$.next(result.total);
       });
 
-    this._search$.next(); 
+    this._search$.next();
 
     this.debouncedCliente.subscribe((data: any) => {
       this.ordernaData(data);
     });
-    
+
     this.buscarCliente.next();
   }
- 
+
   loadRegistros() {
     this.isLoading = true;
-    this.apiService.getAll(this.page, this.pageSize, this.searchTerm).subscribe((data: any) => {
-      this.ordernaData(data);
-    });
+    this.apiService
+      .getAll(this.page, this.pageSize, this.searchTerm)
+      .subscribe((data: any) => {
+        this.ordernaData(data);
+      });
   }
-  ordernaData(data: any){
+  ordernaData(data: any) {
     if (data.status) {
       this.listadoClientes = data.data;
-      this.totalRecords = data.total; 
+      this.totalRecords = data.total;
     }
     setTimeout(() => {
       this.isLoading = false;
     }, 500);
-
   }
   get countries$() {
     return this._countries$.asObservable();
@@ -160,14 +161,15 @@ export class OrdersService {
   }
 
   set page(page: number) {
-    this._set({ page }); 
+    this._set({ page });
     this.loadRegistros();
   }
   set pageSize(pageSize: number) {
     this._set({ pageSize });
   }
   set searchTerm(searchTerm: string) {
-    this._set({ searchTerm }); 
+    this._state.page = 1;
+    this._set({ searchTerm });
     this.buscarCliente.next();
   }
   set sortColumn(sortColumn: SortColumn) {
@@ -193,7 +195,7 @@ export class OrdersService {
 
   private _search(): Observable<SearchResult> {
     const { sortColumn, sortDirection, pageSize, page, searchTerm } =
-      this._state; 
+      this._state;
 
     // 1. sort
     let countries = sort(this.listadoClientes, sortColumn, sortDirection);
