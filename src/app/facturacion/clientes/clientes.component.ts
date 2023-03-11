@@ -139,6 +139,7 @@ export class ClientesComponent {
    * @param content modal content
    */
   openModal(content: any) {
+    this.imagen =null;
     this.listJsForm.reset();
     this.listJsForm.controls["id_"].setValue(0);
     this.submitted = false;
@@ -235,6 +236,7 @@ export class ClientesComponent {
    * Open modal
    * @param content modal content
    */
+  imagen:any=null;
   editModal(content: any, id: any) {
     let cliente = this.service.listadoClientes.filter(
       (e) => e.id_cliente == id
@@ -249,6 +251,7 @@ export class ClientesComponent {
         this.listJsForm.controls["id_municipio"].setValue(id_municipio);
       }, 2000);
     }
+    this.imagen =  cliente.foto_url_nrc;
 
     this.submitted = false;
     this.modalService.open(content, { size: "md", centered: true });

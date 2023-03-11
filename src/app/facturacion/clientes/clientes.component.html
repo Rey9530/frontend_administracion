@@ -268,6 +268,9 @@
           accept="image/jpeg,image/jpg,image/png"
         />
       </div>
+      <div class="mb-1">
+        <img *ngIf="imagen!=null && imagen.length>4" [src]="imagen" class="img-fluid" alt="Responsive image" />
+      </div>
 
       <div class="mb-1">
         <label for="nit-field" class="form-label">No NIT</label>
