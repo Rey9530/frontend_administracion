@@ -1,6 +1,5 @@
-<h6>Listados de Catorias</h6>
 <div class="row">
-  <div class="col-12">
+  <div class="col-sm-auto">
     <button
       class="btn btn-primary createTask float-end"
       type="button"
@@ -10,6 +9,26 @@
     >
       <i class="ri-add-fill align-bottom"></i> Nueva
     </button>
+    
+  </div>
+  <div class="col-sm-auto" *ngIf="loading"> 
+    <div class="spinner-border text-success" role="status" >
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+  <div class="col-sm">
+    <div class="d-flex justify-content-sm-end">
+      <div class="search-box ms-2">
+        <input
+          type="text"
+          class="form-control search"
+          placeholder="Buscar..."
+          (keyup)="setsearchTerm(buscador.value)"
+          #buscador
+        />
+        <i class="ri-search-line search-icon"></i>
+      </div>
+    </div>
   </div>
 </div>
 <div class="table-responsive" *ngIf="!loading">
@@ -55,6 +74,32 @@
       </tr>
     </tbody>
   </table>
+</div>
+
+<div class="row justify-content-md-between align-items-md-center">
+  <div class="col col-sm-6">
+    <div
+      class="dataTables_info mb-2"
+      id="tickets-table_info"
+      role="status"
+      aria-live="polite"
+    >
+      Mostrando
+      {{ (page - 1) * 10 }} a {{ page * 10 }} de {{ collectionSize }} registros
+    </div>
+  </div>
+  <!-- Pagination -->
+  <div class="col col-sm-6">
+    <div class="text-sm-right float-sm-end listjs-pagination">
+      <ngb-pagination
+        [collectionSize]="collectionSize"
+        [(page)]="page"
+        [pageSize]="pageSize"
+      >
+      </ngb-pagination>
+    </div>
+  </div>
+  <!-- End Pagination -->
 </div>
 
 <div class="row" *ngIf="loading">
@@ -214,7 +259,9 @@
             class="form-control"
             placeholder="Ingrese un precio"
             formControlName="precio_con_iva"
-            [ngClass]="{ 'is-invalid': submitted && form['precio_con_iva'].errors }"
+            [ngClass]="{
+              'is-invalid': submitted && form['precio_con_iva'].errors
+            }"
             (keyup)="saverange('+')"
           />
           <div
@@ -235,7 +282,9 @@
             class="form-control"
             placeholder="Ingrese un precio"
             formControlName="precio_sin_iva"
-            [ngClass]="{ 'is-invalid': submitted && form['precio_sin_iva'].errors }"
+            [ngClass]="{
+              'is-invalid': submitted && form['precio_sin_iva'].errors
+            }"
             (keyup)="saverange('-')"
           />
           <div

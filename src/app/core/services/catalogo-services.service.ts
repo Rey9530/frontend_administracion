@@ -9,22 +9,27 @@ import { environment } from "../../../environments/environment";
 export class CatalogoServicesService {
   endpoint: String = environment.API_URL + "facturacion/catalogo";
   constructor(private http: HttpClient) {}
-  getAll() {
-    return this.http.get(`${this.endpoint}`);
+  getAll(
+    pagina: number = 1,
+    registrosXpagina: number = 10,
+    query: string = ""
+  ) {
+    return this.http.get(
+      `${this.endpoint}?pagina=${pagina}&registrosXpagina=${registrosXpagina}&query=${query}`
+    );
   }
   getOne(id: any) {
-    return this.http.get(`${this.endpoint}/${id}`);
+    return this.http.get(`${this.endpoint}/${id}`); 
   }
 
-  create(data:any,id:number) {
-    if(id>0){
+  create(data: any, id: number) {
+    if (id > 0) {
       return this.http.put(`${this.endpoint}/${id}`, data);
-    }else{ 
-      return this.http.post(`${this.endpoint}`, data); 
+    } else {
+      return this.http.post(`${this.endpoint}`, data);
     }
-  } 
+  }
   delete(id: any) {
     return this.http.delete(`${this.endpoint}/${id}`);
   }
-
 }

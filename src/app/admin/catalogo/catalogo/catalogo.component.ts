@@ -1,22 +1,26 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators,
 } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { ToastService } from "src/app/account/login/toast-service"; 
-import { User } from 'src/app/core/models/auth.models';
-import { AuthenticationService, CatalogoServicesService, CategoriasCatalogoServicesService, TipoCatalogoServicesService } from 'src/app/core/services';
+import { debounceTime, Subject, switchMap } from "rxjs";
+import { ToastService } from "src/app/account/login/toast-service";
+import { User } from "src/app/core/models/auth.models";
+import {
+  AuthenticationService,
+  CatalogoServicesService,
+  CategoriasCatalogoServicesService,
+  TipoCatalogoServicesService,
+} from "src/app/core/services";
 // Sweet Alert
 import Swal from "sweetalert2";
 
-
 @Component({
-  selector: 'app-catalogo',
-  templateUrl: './catalogo.component.html',
-  styles: [
-  ]
+  selector: "app-catalogo",
+  templateUrl: "./catalogo.component.html",
+  styles: [],
 })
 export class CatalogoComponent {
   todoForm!: UntypedFormGroup;
@@ -25,8 +29,50 @@ export class CatalogoComponent {
   loading: boolean = false;
   listado: any = [];
 
+  private _state: any = {
+    searchTerm: "",
+    collectionSize: 0,
+    page: 1,
+    pageSize: 10,
+  };
+
+  //paginacion
+
+  get collectionSize() {
+    return this._state.collectionSize;
+  }
+  get page() {
+    return this._state.page;
+  }
+  get pageSize() {
+    return this._state.pageSize;
+  }
+  get searchTerm() {
+    return this._state.searchTerm;
+  }
+
+  setsearchTerm(searchTerm: any) {
+    this._state.searchTerm = searchTerm;
+    console.log(searchTerm);
+    this.buscarCatalogo.next();
+  }
+  set page(page) { 
+    this._state.page = page;
+    this.buscarCatalogo.next();
+  }
+
   listadoCate: any = [];
   listadoTipo: any = [];
+
+  buscarCatalogo = new Subject<void>();
+  debouncedCatalogo = this.buscarCatalogo.pipe(
+    debounceTime(1000),
+    switchMap(() => {
+      this.loading = true;
+      return this.service.getAll(this.page, this.pageSize, this.searchTerm);
+    })
+  );
+
   constructor(
     private modalService: NgbModal,
     private formBuilder: UntypedFormBuilder,
@@ -34,12 +80,12 @@ export class CatalogoComponent {
     private serviceCat: CategoriasCatalogoServicesService,
     private serviceTipo: TipoCatalogoServicesService,
     public toastService: ToastService,
-    public serviceAuth: AuthenticationService,
-  ) {} 
+    public serviceAuth: AuthenticationService
+  ) {}
   ngOnInit(): void {
     this.todoForm = this.formBuilder.group({
       nombre: ["", [Validators.required]],
-      codigo: ["", [Validators.required]], 
+      codigo: ["", [Validators.required]],
       id_categoria: ["", [Validators.required]],
       id_tipo: ["", [Validators.required]],
       descripcion: [""],
@@ -48,12 +94,40 @@ export class CatalogoComponent {
       id_: [0],
     });
     this.obtenerListadoCatTipo();
-    this.obtenerListado(); 
+    // this.obtenerListado();
     this.serviceAuth.currentUser.subscribe({
-      next:resp=>{ 
-        this.usuario=resp;
-      }
-    })
+      next: (resp) => {
+        this.usuario = resp;
+      },
+    });
+
+    this.debouncedCatalogo.subscribe({
+      next: (resp) => {
+        this.loading = false;
+        var r: any = resp;
+        if (r.status) {
+          this.listado = r.registros;
+          this._state.collectionSize = r.total;
+          this._state.page = r.pagina;
+          this._state.pageSize = r.registrosXpagina;  
+        } else {
+          this.toastService.show(r.msg, {
+            classname: "bg-danger text-white",
+          });
+        }
+      },
+      error: (resp) => {
+        this.loading = false;
+        var msg =
+          resp.msg != null
+            ? resp.msg
+            : "Ocurrio un error al cargar la información";
+        this.toastService.show(msg, {
+          classname: "bg-danger text-white",
+        });
+      },
+    });
+    this.buscarCatalogo.next();
   }
 
   openModal(content: any) {
@@ -81,32 +155,7 @@ export class CatalogoComponent {
       id_,
     });
     this.openModal(content);
-  }
-
-  obtenerListado() {
-    this.loading = true;
-    this.service.getAll().subscribe({
-      next: (resp) => {
-        this.loading = false;
-        var r: any = resp;
-        if (r.status) {
-          this.listado = r.registros;
-        } else {
-          this.toastService.show("Ocurrio un error al cargar la información", {
-            classname: "bg-danger text-white",
-            
-          });
-        }
-      },
-      error: (resp) => {
-        this.loading = false;
-        this.toastService.show("Ocurrio un error al cargar la información", {
-          classname: "bg-danger text-white",
-          
-        });
-      },
-    });
-  }
+  } 
 
   obtenerListadoCatTipo() {
     this.loading = true;
@@ -119,12 +168,11 @@ export class CatalogoComponent {
         } else {
           this.toastService.show("Ocurrio un error al cargar la información", {
             classname: "bg-danger text-white",
-            
           });
         }
       },
       error: (resp) => {
-        this.loading = false; 
+        this.loading = false;
       },
     });
 
@@ -137,18 +185,17 @@ export class CatalogoComponent {
         } else {
           this.toastService.show("Ocurrio un error al cargar la información", {
             classname: "bg-danger text-white",
-            
           });
         }
       },
       error: (resp) => {
-        this.loading = false; 
+        this.loading = false;
       },
     });
   }
-  saveTodo() { 
+  saveTodo() {
     if (this.todoForm.valid) {
-      var data = { 
+      var data = {
         nombre: this.form["nombre"].value,
         codigo: this.form["codigo"].value,
         id_categoria: Number(this.form["id_categoria"].value),
@@ -156,16 +203,15 @@ export class CatalogoComponent {
         descripcion: this.form["descripcion"].value,
         precio_con_iva: this.form["precio_con_iva"].value,
         precio_sin_iva: this.form["precio_sin_iva"].value,
-     };
+      };
       this.service.create(data, this.form["id_"].value).subscribe({
         next: (resp) => {
           var r: any = resp;
           if (r.status) {
-            this.obtenerListado();
+            this.buscarCatalogo.next();
             this.closeModal();
             this.toastService.show(r.msg, {
               classname: "bg-success text-white",
-              
             });
             this.todoForm.reset();
           }
@@ -175,21 +221,21 @@ export class CatalogoComponent {
     this.submitted = true;
   }
 
-  saverange(campo:string){
+  saverange(campo: string) {
     console.log();
-    var impuesto = this.usuario.impuesto +1;
-    if(campo==='+'){
+    var impuesto = this.usuario.impuesto + 1;
+    if (campo === "+") {
       var valor = parseFloat(this.form["precio_con_iva"].value);
-      var precio_sin_iva = parseFloat((valor / impuesto).toFixed(2)); 
-      this.todoForm.patchValue({ 
-        precio_sin_iva
+      var precio_sin_iva = parseFloat((valor / impuesto).toFixed(2));
+      this.todoForm.patchValue({
+        precio_sin_iva,
       });
-    }else{
-      var valor = parseFloat(this.form["precio_sin_iva"].value); 
-      var precio_con_iva = parseFloat((valor * impuesto).toFixed(2)); 
-      this.todoForm.patchValue({ 
-        precio_con_iva
-      }); 
+    } else {
+      var valor = parseFloat(this.form["precio_sin_iva"].value);
+      var precio_con_iva = parseFloat((valor * impuesto).toFixed(2));
+      this.todoForm.patchValue({
+        precio_con_iva,
+      });
     }
   }
   eliminar(id_: number) {
@@ -210,11 +256,10 @@ export class CatalogoComponent {
           next: (resp) => {
             var r: any = resp;
             if (r.status) {
-              this.obtenerListado();
+              this.buscarCatalogo.next();
 
               this.toastService.show(r.msg, {
                 classname: "bg-success text-white",
-                
               });
             }
           },
