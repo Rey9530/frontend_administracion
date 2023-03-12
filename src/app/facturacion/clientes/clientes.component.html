@@ -106,6 +106,16 @@
                           Editar
                         </button>
                       </div>
+                      <div class="edit">
+                        <a
+                          [routerLink]="
+                            '/facturacion/clientes/facturas/' + data.id_cliente
+                          "
+                          class="btn btn-sm btn-primary edit-item-btn"
+                        >
+                          Ver Facturas
+                        </a>
+                      </div>
                       <div class="remove">
                         <button
                           class="btn btn-sm btn-danger remove-item-btn"
@@ -269,7 +279,12 @@
         />
       </div>
       <div class="mb-1">
-        <img *ngIf="imagen!=null && imagen.length>4" [src]="imagen" class="img-fluid" alt="Responsive image" />
+        <img
+          *ngIf="imagen != null && imagen.length > 4"
+          [src]="imagen"
+          class="img-fluid"
+          alt="Responsive image"
+        />
       </div>
 
       <div class="mb-1">

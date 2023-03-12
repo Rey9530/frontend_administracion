@@ -1,0 +1,93 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card" id="invoiceList">
+      <div class="card-header border-0">
+        <div class="d-flex align-items-center">
+          <h5 class="card-title mb-0 flex-grow-1">Facturas</h5>
+        </div>
+      </div>
+
+      <div
+        class="card-body bg-soft-light border border-dashed border-start-0 border-end-0"
+      >
+        <div class="table-responsive table-card">
+          <table class="table align-middle table-nowrap" id="invoiceTable">
+            <thead class="text-muted">
+              <tr>
+                <th class="sort text-uppercase" data-sort="invoice_id">#</th>
+                <th class="sort text-uppercase" data-sort="cliente">Cliente</th>
+                <th class="sort text-uppercase" data-sort="email">Tipo</th>
+                <th class="sort text-uppercase" data-sort="date">Fecha</th>
+                <th class="sort text-uppercase" data-sort="invoice_amount">
+                  Total
+                </th>
+                <th class="sort text-uppercase" data-sort="status">Estado</th>
+                <th class="sort text-uppercase" data-sort="action">Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="list form-check-all">
+              <tr *ngFor="let data of invoices" id="i_{{ data.id_factura }}">
+                <td>
+                  {{ data.numero_factura }}
+                </td>
+                <td class="customer_name">
+                  <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 avatar-xs me-2">
+                      <div
+                        class="avatar-title bg-soft-success text-success rounded-circle fs-13"
+                      >
+                        {{ data.cliente.charAt(0) }}
+                      </div>
+                    </div>
+                    {{ data.cliente }}
+                  </div>
+                </td>
+                <td>
+                  <ngb-highlight [result]="data.Bloque.Tipo.nombre">
+                  </ngb-highlight>
+                </td>
+                <td class="date">
+                  <!-- {{ data.fecha_creacion.split("T")[0] }} -->
+
+                  {{ data.fecha_creacion | date : "longDate" : "6000" : "es" }}
+                  <br />
+                  <small class="text-muted">{{
+                    data.fecha_creacion | date : "shortTime"
+                  }}</small>
+                </td>
+                <td>
+                  <!-- <ngb-highlight
+                  [result]=""
+                  [term]="service.searchTerm"
+                > 
+                </ngb-highlight> -->
+                  {{ data.total | currency }}
+                </td>
+                <td class="status">
+                  <span
+                    class="badge text-uppercase"
+                    [ngClass]="{
+                      'badge-soft-success': data.estado === 'ACTIVO',
+                      'badge-soft-danger': data.estado === 'ANULADA'
+                    }"
+                    >{{ data.estado }}</span
+                  >
+                </td>
+                <td>
+                  <a class="btn btn-danger" (click)="eliminar(data.id_factura)"
+                    ><i class="ri-delete-bin-7-line"></i
+                  ></a>
+                  <a
+                    class="btn btn-info m-1"
+                    [routerLink]="'/facturacion/factura/' + data.id_factura"
+                    ><i class="ri-eye-line"></i
+                  ></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

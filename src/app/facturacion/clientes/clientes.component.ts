@@ -4,13 +4,10 @@ import { Observable, Subject, takeUntil } from "rxjs";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import {
   UntypedFormBuilder,
-  UntypedFormGroup,
-  FormArray,
+  UntypedFormGroup, 
   Validators,
 } from "@angular/forms";
-
-// Sweet Alert
-import Swal from "sweetalert2";
+ 
 
 import { OrdersService } from "./listjs.service";
 import { NgbdOrdersSortableHeader } from "./listjs-sortable.directive";

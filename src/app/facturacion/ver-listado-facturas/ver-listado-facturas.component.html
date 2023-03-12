@@ -332,10 +332,10 @@
                     </ngb-highlight>
                   </td>
                   <td class="date">
-                    {{ data.fecha_creacion.split("T")[0] }}
+                    <!-- {{ data.fecha_creacion.split("T")[0] }} -->
 
-                    <!-- {{ data.fecha_creacion | date : "longDate":'6000':'es'  }} <br>
-                    <small class="text-muted">{{ data.fecha_creacion | date : "shortTime" }}</small> -->
+                    {{ data.fecha_creacion | date : "longDate":'6000':'es'  }} <br>
+                    <small class="text-muted">{{ data.fecha_creacion | date : "shortTime" }}</small>
                   </td>
                   <td>
                     <!-- <ngb-highlight

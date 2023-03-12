@@ -6,12 +6,7 @@ import { environment } from "../../../environments/environment";
 @Injectable({
   providedIn: "root",
 })
-export class ClienteServicesService {
-  // httpOptions = {
-  //   headers: new HttpHeaders({
-  //     "Content-Type": "multipart/form-data",
-  //   }),
-  // };
+export class ClienteServicesService { 
   endpoint: String = environment.API_URL + "facturacion/cliente";
   constructor(private http: HttpClient) {}
   getAll(
@@ -25,6 +20,9 @@ export class ClienteServicesService {
   }
   getOne(id: any) {
     return this.http.get(`${this.endpoint}/${id}`);
+  }
+  getFacturas(id: any) {
+    return this.http.get(`${this.endpoint}/facturas/${id}`);
   }
 
   create(data: any, id: number) {
