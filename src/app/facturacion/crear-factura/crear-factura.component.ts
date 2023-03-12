@@ -6,6 +6,7 @@ import {
   Validators,
   AbstractControl,
 } from "@angular/forms";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import {
   debounceTime,
   distinctUntilChanged,
@@ -18,6 +19,7 @@ import { ToastService } from "src/app/account/login/toast-service";
 import { DetalleFactura } from "src/app/core/models";
 import {
   BloquesServicesService,
+  ClienteServicesService,
   DescuentosServicesService,
   FacturaServicesService,
   SistemaServicesService,
@@ -83,7 +85,9 @@ export class CrearFacturaComponent implements OnInit {
     private serviceSistema: SistemaServicesService,
     private serviceDescuentos: DescuentosServicesService,
     private serviceTiFactura: BloquesServicesService,
-    public toastService: ToastService
+    public toastService: ToastService,
+    private modalService: NgbModal,
+    private apiService: ClienteServicesService
   ) {
     this.userForm = this.formBuilder.group({
       items: this.formBuilder.array([this.formBuilder.control(null)]),
@@ -119,6 +123,7 @@ export class CrearFacturaComponent implements OnInit {
     this.recalculateCart();
   }
   ngOnInit(): void {
+    this.obtenerDEpartamentos();
     this.obtenerListadoDeTipos();
     this.obtenerMetodosPago();
     this.obtenerListadoDeTiposDescuentos();
@@ -142,6 +147,25 @@ export class CrearFacturaComponent implements OnInit {
       } else {
         this.listadoClientes = [];
       }
+    });
+
+    /**
+     * Form Validation ára clientes
+     */
+    this.listJsForm = this.formBuilder.group({
+      nombre: ["", [Validators.required]],
+      giro: [""],
+      razon_social: [""],
+      registro_nrc: [""],
+      nrc_file: [""],
+      nit: [""],
+      id_municipio: [""],
+      id_departamento: [""],
+      direccion: [""],
+      telefono: [""],
+      correo: [""],
+      dui: [""],
+      id_: [0],
     });
   }
 
@@ -219,6 +243,10 @@ export class CrearFacturaComponent implements OnInit {
         id_tipo_factura: [id_, [Validators.required]],
         no_registro: [""],
         cliente_search: [""],
+        correo: [""],
+        telefono: [""],
+        dui: [""],
+        razon_social: [""],
         nit: [""],
         giro: [""],
         id_departamento: [""],
@@ -227,6 +255,7 @@ export class CrearFacturaComponent implements OnInit {
         descuento: [0],
         iva: [0],
         total: [0],
+        id_cliente: [0],
       });
     } else {
       // credito fiscal
@@ -238,12 +267,19 @@ export class CrearFacturaComponent implements OnInit {
         giro: ["", [Validators.required]],
         id_municipio: ["", [Validators.required]],
         id_tipo_factura: [id_, [Validators.required]],
+
+        correo: [""],
+        telefono: [""],
+        dui: [""],
+        razon_social: [""],
+
         cliente_search: [""],
         id_departamento: [""],
-        subtotal: [""],
-        descuento: [""],
-        iva: [""],
-        total: [""],
+        subtotal: [0],
+        descuento: [0],
+        iva: [0],
+        total: [0],
+        id_cliente: [0],
       });
     }
     if (valores) {
@@ -281,10 +317,6 @@ export class CrearFacturaComponent implements OnInit {
         });
       },
     });
-
-    if (this.tipoFactura == 2 && this.listadoDepartamentos.length == 0) {
-      this.obtenerDEpartamentos();
-    }
   }
   obtenerDEpartamentos() {
     this.service.obtenerDepartamentos().subscribe({
@@ -575,14 +607,29 @@ export class CrearFacturaComponent implements OnInit {
       this.montoTotal > 0 &&
       this.metodoPago > 0
     ) {
-      var form = {
-        cliente: this.form["cliente"].value,
-        direccion: this.form["direccion"].value,
-        no_registro: this.form["no_registro"].value,
-        nit: this.form["nit"].value,
-        giro: this.form["giro"].value,
-        id_municipio: this.form["id_municipio"].value,
-        id_tipo_factura: this.form["id_tipo_factura"].value,
+      // var form = {
+      //   cliente: this.form["cliente"].value,
+      //   direccion: this.form["direccion"].value,
+      //   no_registro: this.form["no_registro"].value,
+      //   nit: this.form["nit"].value,
+      //   giro: this.form["giro"].value,
+      //   id_municipio: this.form["id_municipio"].value,
+      //   id_tipo_factura: this.form["id_tipo_factura"].value,
+      //   subtotal: this.subtotal,
+      //   descuento: this.descuento,
+      //   iva: this.iva,
+      //   total: this.montoTotal,
+      //   efectivo: Number(this.efectivo - this.cambio),
+      //   tarjeta: Number(this.tarjeta),
+      //   cheque: Number(this.cheque),
+      //   transferencia: Number(this.transferencia),
+      //   credito: Number(this.credito),
+      //   id_descuento: this.id_descuento,
+      //   id_metodo_pago: this.metodoPago,
+      //   detalle_factura: this.listadoDeDetalle,
+      // };
+
+      this.InvoicesForm.patchValue({
         subtotal: this.subtotal,
         descuento: this.descuento,
         iva: this.iva,
@@ -592,33 +639,36 @@ export class CrearFacturaComponent implements OnInit {
         cheque: Number(this.cheque),
         transferencia: Number(this.transferencia),
         credito: Number(this.credito),
-        id_descuento: this.id_descuento,
-        id_metodo_pago: this.metodoPago,
-        detalle_factura: this.listadoDeDetalle,
-      };
-      this.service.guardar(form).subscribe({
-        next: (resp) => {
-          this.submitted = false;
-          this.loading = false;
-          var r: any = resp;
-          if (r.status) {
-            this.resetartodo();
-            this.toastService.show(r.msg, {
-              classname: "bg-success text-white",
-            });
-          } else {
-            this.toastService.show(r.msg, {
-              classname: "bg-danger text-white",
-            });
-          }
-        },
-        error: (resp) => {
-          this.loading = false;
-          this.toastService.show("Ocurrio un error al cargar la información", {
-            classname: "bg-danger text-white",
-          });
-        },
       });
+      var form = this.InvoicesForm.value;
+      (form.detalle_factura = this.listadoDeDetalle),
+        (form.id_metodo_pago = this.metodoPago),
+        this.service.guardar(form).subscribe({
+          next: (resp) => {
+            this.submitted = false;
+            this.loading = false;
+            var r: any = resp;
+            if (r.status) {
+              this.resetartodo();
+              this.toastService.show(r.msg, {
+                classname: "bg-success text-white",
+              });
+            } else {
+              this.toastService.show(r.msg, {
+                classname: "bg-danger text-white",
+              });
+            }
+          },
+          error: (resp) => {
+            this.loading = false;
+            this.toastService.show(
+              "Ocurrio un error al cargar la información",
+              {
+                classname: "bg-danger text-white",
+              }
+            );
+          },
+        });
     } else {
       this.toastService.show("Favor verificar los parametros ingresados", {
         classname: "bg-danger text-white",
@@ -652,16 +702,29 @@ export class CrearFacturaComponent implements OnInit {
   }
 
   keyword = "nombre";
-  listadoClientes = []; 
+  listadoClientes = [];
   selectEvent(item: any) {
     // do something with selected item
-    const { Municipio, nombre, giro, nit, registro_nrc, direccion } = item;
-
+    const {
+      Municipio = null,
+      nombre = "",
+      giro = "",
+      nit = "",
+      registro_nrc = "",
+      direccion = "",
+      correo = "",
+      telefono = "",
+      dui = "",
+      razon_social = "",
+      id_cliente = 0,
+      foto_url_nrc = ""
+    } = item;
+    this.imagen = foto_url_nrc;
     if (this.listadoDepartamentos.length == 0) {
       this.obtenerDEpartamentos();
     }
     if (Municipio.id_departamento > 0) {
-      this.listadoMunicipios = [{ ...Municipio }]; 
+      this.listadoMunicipios = [{ ...Municipio }];
     }
     this.InvoicesForm.patchValue({
       cliente: nombre,
@@ -671,15 +734,21 @@ export class CrearFacturaComponent implements OnInit {
       id_municipio: Municipio.id_municipio,
       id_departamento: Municipio.id_departamento,
       direccion,
+      correo,
+      telefono,
+      dui,
+      razon_social,
+      id_cliente,
     });
   }
 
   onChangeSearch(val: any) {
     // fetch remote data from here
-    // And reassign the 'data' which is binded to 'data' property. 
+    // And reassign the 'data' which is binded to 'data' property.
     this.InvoicesForm.patchValue({
       cliente: val,
     });
+    console.log(1234);
     if (val.length < 3) return;
     this.buscarCliente.next(val);
   }
@@ -687,5 +756,79 @@ export class CrearFacturaComponent implements OnInit {
   onFocused(e: any) {
     // do something when input is focused
     // console.log(e);
+  }
+
+  //// crear cliente
+
+  /**
+   * Open modal
+   * @param content modal content
+   */
+  imagen: any = null;
+  listJsForm!: UntypedFormGroup;
+  openModal(content: any) {
+    this.imagen = null;
+    this.listJsForm.reset();
+    this.listJsForm.controls["id_"].setValue(0);
+    this.submitted = false;
+    this.modalService.open(content, { size: "md", centered: true });
+  }
+
+  filess: any = null;
+  cargar_files($event: any) {
+    this.filess = $event.target.files[0];
+  }
+
+  /**
+   * Form data get
+   */
+  get formCliente() {
+    return this.listJsForm.controls;
+  }
+
+  /**
+   * Save saveListJs
+   */
+  saveListJs() {
+    if (this.listJsForm.valid) {
+      var formData = new FormData();
+      if (this.filess != null) {
+        formData.append("files", this.filess, this.filess.name);
+      }
+      formData.append("nombre", this.formCliente["nombre"].value);
+      formData.append("giro", this.formCliente["giro"].value);
+      formData.append("razon_social", this.formCliente["razon_social"].value);
+      formData.append("registro_nrc", this.formCliente["registro_nrc"].value);
+      formData.append("nit", this.formCliente["nit"].value);
+      formData.append("id_municipio", this.formCliente["id_municipio"].value);
+      formData.append("direccion", this.formCliente["direccion"].value);
+      formData.append("telefono", this.formCliente["telefono"].value);
+      formData.append("correo", this.formCliente["correo"].value);
+      formData.append("dui", this.formCliente["dui"].value);
+
+      this.loading = true;
+      this.apiService.create(formData, 0).subscribe((resp: any) => {
+        this.loading = false;
+        if (resp.status) {
+          this.toastService.show(resp.msg, {
+            classname: "bg-success text-white",
+          });
+          this.selectEvent(resp.data);
+          this.modalService.dismissAll();
+
+          this.InvoicesForm.patchValue({
+            cliente_search: resp.data,
+          });
+          setTimeout(() => {
+            this.listJsForm.reset();
+          }, 500);
+        } else {
+          this.toastService.show(resp.msg, {
+            classname: "bg-danger text-white",
+          });
+        }
+      });
+    }
+    this.submitted = true;
   }
 }

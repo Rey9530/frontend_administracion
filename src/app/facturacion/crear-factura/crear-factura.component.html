@@ -114,6 +114,19 @@
                 />
               </div>
             </div>
+            <div class="col-lg-3 d-grid gap-2">
+              <br />
+              <button
+                type="button"
+                class="btn btn-primary add-btn btn-block"
+                data-bs-toggle="modal"
+                id="create-btn"
+                data-bs-target="#showModal"
+                (click)="openModal(content)"
+              >
+                <i class="ri-add-line align-bottom me-1"></i> Nuevo Cliente
+              </button>
+            </div>
             <!--end col-->
           </div>
           <!--end row-->
@@ -123,24 +136,13 @@
             <div class="col-12">
               <div>
                 <label class="text-muted text-uppercase fw-semibold"
-                  >Datos del cliente</label
+                  >Datos del cliente </label
                 >
+                <a [href]="imagen" *ngIf="(imagen!=null && imagen.length>4)" target="_blank"> Ver Documento Fiscal</a>
               </div>
             </div>
 
             <div class="col-lg-4 col-sm-4 mb-4">
-              <!-- <input
-                type="text"
-                class="form-control bg-light border-0"
-                id="cliente"
-                placeholder="Cliente"
-                required
-                formControlName="cliente"
-                [ngClass]="{
-                  'is-invalid': submitted && form['cliente'].errors
-                }"
-              /> -->
-
               <ng-autocomplete
                 [data]="listadoClientes"
                 [searchKeyword]="keyword"
@@ -182,6 +184,59 @@
                 formControlName="direccion"
                 [ngClass]="{
                   'is-invalid': submitted && form['direccion'].errors
+                }"
+              />
+            </div>
+
+            <div class="col-lg-3 col-sm-3 mb-4">
+              <input
+                type="text"
+                class="form-control bg-light border-0"
+                id="direccion"
+                placeholder="Dui"
+                formControlName="dui"
+                [ngClass]="{
+                  'is-invalid': submitted && form['dui'].errors
+                }"
+              />
+            </div>
+            <div class="col-lg-3 col-sm-3 mb-4">
+              <input
+                type="text"
+                class="form-control bg-light border-0"
+                data-plugin="cleave-phone"
+                id="correo"
+                placeholder="Correo"
+                formControlName="correo"
+                [ngClass]="{
+                  'is-invalid': submitted && form['correo'].errors
+                }"
+              />
+            </div>
+            <div class="col-lg-3 col-sm-3 mb-4">
+              <input
+                type="text"
+                class="form-control bg-light border-0"
+                data-plugin="cleave-phone"
+                id="telefono"
+                placeholder="Teléfono"
+                formControlName="telefono"
+                [ngClass]="{
+                  'is-invalid': submitted && form['telefono'].errors
+                }"
+              />
+            </div>
+            <div class="col-lg-3 col-sm-3 mb-4">
+              <input
+                type="text"
+                class="form-control bg-light border-0"
+                data-plugin="cleave-phone"
+                id="razon_social"
+                placeholder="Razon social"
+                required
+                formControlName="razon_social"
+                [ngClass]="{
+                  'is-invalid': submitted && form['razon_social'].errors
                 }"
               />
             </div>
@@ -471,7 +526,7 @@
                         class="form-control bg-light border-0"
                         data-choices
                         data-choices-search-false
-                        data-choices-removeItem 
+                        data-choices-removeItem
                         [(ngModel)]="metodoPago"
                         id="choices-payment-type"
                         (change)="asignarMethodoDePago(metodosPago)"
@@ -655,3 +710,221 @@
   aria-live="polite"
   aria-atomic="true"
 ></app-toasts-facturacion>
+
+
+
+<!-- Add ListJs Data -->
+<ng-template #content role="document" let-modal>
+  <div class="modal-header bg-light p-3">
+    <h5 class="modal-title" id="exampleModalLabel">Cliente</h5>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="modal"
+      aria-label="Close"
+      id="close-modal"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <form
+    (ngSubmit)="saveListJs()"
+    [formGroup]="listJsForm"
+    class="tablelist-form"
+    autocomplete="off"
+  >
+    <div class="modal-body">
+      <div class="mb-1">
+        <label for="nombre-field" class="form-label">Nombre</label>
+        <input
+          type="text"
+          id="nombre-field"
+          class="form-control"
+          placeholder="Ingrese un nombre"
+          required
+          formControlName="nombre"
+          [ngClass]="{
+            'is-invalid': submitted && formCliente['nombre'].errors
+          }"
+        />
+        <div class="invalid-feedback">Please enter a customer name.</div>
+      </div>
+
+      <div class="mb-1">
+        <label for="correo-field" class="form-label">Correo </label>
+        <input
+          type="correo"
+          id="correo-field"
+          class="form-control"
+          placeholder="Ingrese un correo"
+          formControlName="correo"
+          [ngClass]="{ 'is-invalid': submitted && formCliente['correo'].errors }"
+        />
+        <div class="invalid-feedback">Por favor ingrese un correo valido.</div>
+      </div>
+
+      <div class="mb-1">
+        <label for="telefono-field" class="form-label">Telefono</label>
+        <input
+          type="text"
+          id="telefono-field"
+          class="form-control"
+          placeholder="Ingrese un numero de telefono."
+          formControlName="telefono"
+          [ngClass]="{ 'is-invalid': submitted && formCliente['telefono'].errors }"
+        />
+        <div class="invalid-feedback">Ingrese un numero de telefono.</div>
+      </div>
+
+      <div class="mb-1">
+        <label for="giro-field" class="form-label">Giro</label>
+        <input
+          type="text"
+          id="giro-field"
+          class="form-control"
+          placeholder="Ingrese un giro."
+          formControlName="giro"
+          [ngClass]="{ 'is-invalid': submitted && formCliente['giro'].errors }"
+        />
+      </div>
+
+      <div class="mb-1">
+        <label for="razon_social-field" class="form-label">Razon Social</label>
+        <input
+          type="text"
+          id="razon_social-field"
+          class="form-control"
+          placeholder="Ingrese una razon social."
+          formControlName="razon_social"
+          [ngClass]="{ 'is-invalid': submitted && formCliente['razon_social'].errors }"
+        />
+      </div>
+
+      <div class="mb-1">
+        <label for="registro_nrc-field" class="form-label">No NRC</label>
+        <input
+          type="text"
+          id="registro_nrc-field"
+          class="form-control"
+          placeholder="Ingrese un No NRC."
+          formControlName="registro_nrc"
+          [ngClass]="{ 'is-invalid': submitted && formCliente['registro_nrc'].errors }"
+        />
+      </div>
+
+      <div class="mb-1">
+        <label for="formFile-field" class="form-label">Foto Documento</label>
+        <input
+          class="form-control"
+          type="file"
+          id="formFile-field"
+          (change)="cargar_files($event)"
+          accept="image/jpeg,image/jpg,image/png"
+        />
+      </div>
+      <div class="mb-1">
+        <img *ngIf="imagen!=null && imagen.length>4" [src]="imagen" class="img-fluid" alt="Responsive image" />
+      </div>
+
+      <div class="mb-1">
+        <label for="nit-field" class="form-label">No NIT</label>
+        <input
+          type="text"
+          id="nit-field"
+          class="form-control"
+          placeholder="Ingrese un No NIT."
+          formControlName="nit"
+          [ngClass]="{ 'is-invalid': submitted && formCliente['nit'].errors }"
+        />
+      </div>
+
+      <div class="mb-1">
+        <label for="dui-field" class="form-label">DUI</label>
+        <input
+          type="text"
+          id="dui-field"
+          class="form-control"
+          placeholder="Ingrese DUI."
+          formControlName="dui"
+          [ngClass]="{ 'is-invalid': submitted && formCliente['dui'].errors }"
+        />
+      </div>
+
+      <div class="mb-1">
+        <label for="departamento-field" class="form-label">Departamento</label>
+        <select
+          class="form-control"
+          data-trigger
+          name="departamento-field"
+          id="statdepartamentous-field"
+          formControlName="id_departamento"
+          (change)="obtenerMunicipios(departamento.value)"
+          #departamento
+        >
+          <option value="">Departamentos..</option>
+          <option
+            *ngFor="let item of listadoDepartamentos"
+            value="{{ item.id_departamento }}"
+          >
+            {{ item.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="mb-1">
+        <label for="municipio-field" class="form-label">Municipio</label>
+        <select
+          class="form-control"
+          data-trigger
+          name="municipio-field"
+          id="municipio-field"
+          formControlName="id_municipio"
+          [ngClass]="{ 'is-invalid': submitted && formCliente['id_municipio'].errors }"
+        >
+          <option value="">Municipios..</option>
+          <option
+            *ngFor="let item of listadoMunicipios"
+            value="{{ item.id_municipio }}"
+          >
+            {{ item.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div>
+        <label for="direccion-field" class="form-label">Dirección</label>
+        <input
+          type="text"
+          id="direccion-field"
+          class="form-control"
+          placeholder="Ingrese una direccón."
+          formControlName="direccion"
+          [ngClass]="{ 'is-invalid': submitted && formCliente['direccion'].errors }"
+        />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="hstack gap-2 justify-content-end">
+        <button
+          type="button"
+          class="btn btn-light"
+          data-bs-dismiss="modal"
+          (click)="modal.close('Close click')"
+        >
+          Cancelar
+        </button>
+        <div class="spinner-border text-success" role="status" *ngIf="loading">
+          <span class="sr-only">Cargando...</span>
+        </div>
+        <button
+          type="submit"
+          class="btn btn-success"
+          id="add-btn"
+          *ngIf="!loading"
+        >
+          Procesar
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
